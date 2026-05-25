@@ -1,0 +1,10 @@
+# IDE
+.vscode/
+.idea/
+
+# Trae workspace
+.trae/
+
+# OS files
+.DS_Store
+Thumbs.db

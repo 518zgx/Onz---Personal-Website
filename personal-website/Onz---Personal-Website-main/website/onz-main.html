@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>(function(){var t='cyberpunk';try{var s=localStorage.getItem('onz_theme');if(s==='aurora'||s==='midnight'||s==='cyberpunk')t=s;}catch(e){}document.documentElement.setAttribute('data-theme',t);})();</script>
     <title>ONZ | 个人空间</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,10 +31,60 @@
             --onz-black: #0a0a0f;
             --onz-dark: #1a1a2e;
             --onz-cyan: #00f5ff;
-            --onz-orange: #ff4500;
             --onz-purple: #9d00ff;
+            --onz-orange: #ff4500;
             --onz-green: #00ff88;
             --onz-silver: #c0c0c0;
+            --onz-card-bg: rgba(26,26,46,0.6);
+            --onz-card-border: rgba(0,245,255,0.15);
+            --onz-text-primary: #ffffff;
+            --onz-text-secondary: rgba(255,255,255,0.7);
+            --onz-text-muted: rgba(255,255,255,0.5);
+            --onz-scanline-opacity: 0.03;
+            --onz-noise-opacity: 0.03;
+            --onz-glow-color: rgba(0,245,255,0.3);
+            --onz-nav-bg: rgba(10,10,15,0.85);
+            --onz-section-bg: linear-gradient(180deg, transparent, rgba(0,0,0,0.2), transparent);
+        }
+
+        [data-theme="aurora"] {
+            --onz-black: #f8f9fc;
+            --onz-dark: #ffffff;
+            --onz-cyan: #00c9db;
+            --onz-purple: #7c3aed;
+            --onz-orange: #f97316;
+            --onz-green: #10b981;
+            --onz-silver: #374151;
+            --onz-card-bg: rgba(255,255,255,0.9);
+            --onz-card-border: rgba(0,0,0,0.08);
+            --onz-text-primary: #1a1a2e;
+            --onz-text-secondary: rgba(0,0,0,0.6);
+            --onz-text-muted: rgba(0,0,0,0.4);
+            --onz-scanline-opacity: 0;
+            --onz-noise-opacity: 0;
+            --onz-glow-color: rgba(0,201,219,0.15);
+            --onz-nav-bg: rgba(248,249,252,0.9);
+            --onz-section-bg: linear-gradient(180deg, transparent, rgba(0,0,0,0.02), transparent);
+        }
+
+        [data-theme="midnight"] {
+            --onz-black: #0f0a1a;
+            --onz-dark: #1a1030;
+            --onz-cyan: #06b6d4;
+            --onz-purple: #a855f7;
+            --onz-orange: #f43f5e;
+            --onz-green: #fbbf24;
+            --onz-silver: #d4d4d8;
+            --onz-card-bg: rgba(26,16,48,0.6);
+            --onz-card-border: rgba(168,85,247,0.2);
+            --onz-text-primary: #e8e8f0;
+            --onz-text-secondary: rgba(255,255,255,0.65);
+            --onz-text-muted: rgba(255,255,255,0.4);
+            --onz-scanline-opacity: 0.015;
+            --onz-noise-opacity: 0.02;
+            --onz-glow-color: rgba(168,85,247,0.3);
+            --onz-nav-bg: rgba(15,10,26,0.9);
+            --onz-section-bg: linear-gradient(180deg, transparent, rgba(168,85,247,0.03), transparent);
         }
 
         * {
@@ -49,7 +100,7 @@
         body {
             font-family: 'Rajdhani', sans-serif;
             background: var(--onz-black);
-            color: white;
+            color: var(--onz-text-primary);
             overflow-x: hidden;
             line-height: 1.6;
             opacity: 0;
@@ -62,9 +113,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: 
-                linear-gradient(90deg, rgba(0, 245, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(rgba(0, 245, 255, 0.03) 1px, transparent 1px);
+            background:
+                linear-gradient(90deg, var(--onz-card-border) 1px, transparent 1px),
+                linear-gradient(var(--onz-card-border) 1px, transparent 1px);
             background-size: 50px 50px;
             pointer-events: none;
             z-index: 0;
@@ -209,11 +260,11 @@
             top: 0;
             left: 0;
             right: 0;
-            background: rgba(10, 10, 15, 0.95);
+            background: var(--onz-nav-bg);
             backdrop-filter: blur(20px);
             z-index: 1000;
             padding: 1.5rem 3rem;
-            border-bottom: 1px solid rgba(0, 245, 255, 0.2);
+            border-bottom: 1px solid var(--onz-card-border);
             opacity: 0;
         }
 
@@ -236,8 +287,8 @@
             max-width: 1400px;
             margin: 0 auto;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            gap: 1.5rem;
         }
 
         .nav-logo {
@@ -249,6 +300,7 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             letter-spacing: 4px;
+            margin-right: auto;
         }
 
         .nav-links {
@@ -358,7 +410,7 @@
 
         .hero-description {
             font-size: 1.1rem;
-            color: rgba(255, 255, 255, 0.7);
+            color: var(--onz-text-secondary);
             max-width: 700px;
             margin: 0 auto 3rem;
             line-height: 2;
@@ -401,7 +453,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 0.3), transparent);
+            background: linear-gradient(90deg, transparent, var(--onz-glow-color), transparent);
             transition: left 0.5s ease;
         }
 
@@ -411,7 +463,7 @@
 
         .btn:hover {
             background: rgba(0, 245, 255, 0.1);
-            box-shadow: 0 0 30px rgba(0, 245, 255, 0.5);
+            box-shadow: 0 0 30px var(--onz-glow-color);
             transform: translateY(-3px);
         }
 
@@ -430,9 +482,9 @@
             justify-content: center;
             gap: 4rem;
             padding: 4rem 2rem;
-            border-top: 1px solid rgba(0, 245, 255, 0.1);
-            border-bottom: 1px solid rgba(0, 245, 255, 0.1);
-            background: rgba(26, 26, 46, 0.5);
+            border-top: 1px solid var(--onz-card-border);
+            border-bottom: 1px solid var(--onz-card-border);
+            background: var(--onz-card-bg);
         }
 
         .stat-item {
@@ -492,7 +544,7 @@
 
         /* 关于我 */
         .about-section {
-            background: linear-gradient(180deg, transparent, rgba(0, 245, 255, 0.02), transparent);
+            background: var(--onz-section-bg);
         }
 
         .about-grid {
@@ -511,7 +563,7 @@
 
         .about-text p {
             font-size: 1.1rem;
-            color: rgba(255, 255, 255, 0.8);
+            color: var(--onz-text-secondary);
             margin-bottom: 1.5rem;
             line-height: 1.9;
         }
@@ -523,8 +575,8 @@
         }
 
         .skill-card {
-            background: rgba(26, 26, 46, 0.8);
-            border: 1px solid rgba(0, 245, 255, 0.2);
+            background: var(--onz-card-bg);
+            border: 1px solid var(--onz-card-border);
             padding: 1.5rem;
             border-radius: 4px;
             transition: all 0.3s ease;
@@ -545,7 +597,7 @@
         .skill-card:hover {
             transform: translateY(-5px);
             border-color: var(--onz-cyan);
-            box-shadow: 0 10px 30px rgba(0, 245, 255, 0.2);
+            box-shadow: 0 10px 30px var(--onz-glow-color);
         }
 
         .skill-name {
@@ -593,7 +645,7 @@
 
         /* 项目展示 */
         .projects-section {
-            background: linear-gradient(180deg, transparent, rgba(157, 0, 255, 0.02), transparent);
+            background: var(--onz-section-bg);
         }
 
         .projects-grid {
@@ -603,8 +655,8 @@
         }
 
         .project-card {
-            background: rgba(26, 26, 46, 0.9);
-            border: 1px solid rgba(0, 245, 255, 0.2);
+            background: var(--onz-card-bg);
+            border: 1px solid var(--onz-card-border);
             border-radius: 8px;
             overflow: hidden;
             transition: all 0.4s ease;
@@ -613,7 +665,7 @@
         }
 
         .project-card.current-page {
-            border-color: rgba(0, 245, 255, 0.4);
+            border-color: var(--onz-cyan);
         }
 
         .project-card.current-page::after {
@@ -627,7 +679,7 @@
             text-transform: uppercase;
             padding: 0.3rem 0.8rem;
             background: rgba(0, 245, 255, 0.15);
-            border: 1px solid rgba(0, 245, 255, 0.4);
+            border: 1px solid var(--onz-cyan);
             color: var(--onz-cyan);
             border-radius: 20px;
             z-index: 2;
@@ -636,7 +688,7 @@
         .project-card:hover {
             transform: translateY(-10px);
             border-color: var(--onz-cyan);
-            box-shadow: 0 20px 50px rgba(0, 245, 255, 0.3);
+            box-shadow: 0 20px 50px var(--onz-glow-color);
         }
 
         .project-card::before {
@@ -704,62 +756,6 @@
             border-radius: 20px;
         }
 
-        /* 生成艺术 */
-        .art-section {
-            background: linear-gradient(180deg, transparent, rgba(255, 69, 0, 0.02), transparent);
-        }
-
-        .art-showcase {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            align-items: center;
-        }
-
-        .art-visual {
-            background: rgba(26, 26, 46, 0.9);
-            border: 1px solid rgba(255, 69, 0, 0.3);
-            border-radius: 8px;
-            padding: 3rem;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .art-visual::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at center, rgba(255, 69, 0, 0.1), transparent);
-        }
-
-        .art-emoji {
-            font-size: 8rem;
-            margin-bottom: 1rem;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .art-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-            color: var(--onz-orange);
-        }
-
-        .art-text {
-            color: var(--onz-silver);
-            line-height: 1.8;
-            margin-bottom: 2rem;
-        }
-
         /* 联系方式 */
         .contact-section {
             background: linear-gradient(180deg, transparent, var(--onz-dark), var(--onz-black));
@@ -794,7 +790,7 @@
         .social-link {
             width: 60px;
             height: 60px;
-            border: 2px solid rgba(0, 245, 255, 0.3);
+            border: 2px solid var(--onz-card-border);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -809,7 +805,7 @@
             background: var(--onz-cyan);
             color: var(--onz-black);
             transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 245, 255, 0.5);
+            box-shadow: 0 10px 30px var(--onz-glow-color);
         }
 
         .contact-email {
@@ -825,14 +821,14 @@
 
         .contact-email:hover {
             background: rgba(0, 245, 255, 0.1);
-            box-shadow: 0 0 30px rgba(0, 245, 255, 0.3);
+            box-shadow: 0 0 30px var(--onz-glow-color);
         }
 
         /* 页脚 */
         footer {
             text-align: center;
             padding: 3rem 2rem;
-            border-top: 1px solid rgba(0, 245, 255, 0.1);
+            border-top: 1px solid var(--onz-card-border);
         }
 
         footer p {
@@ -900,7 +896,7 @@
                 left: 0;
                 width: 100%;
                 height: 100vh;
-                background: rgba(10, 10, 15, 0.98);
+                background: var(--onz-nav-bg);
                 backdrop-filter: blur(20px);
                 flex-direction: column;
                 align-items: center;
@@ -929,11 +925,12 @@
                 justify-content: center;
             }
 
-            .about-grid,
-            .art-showcase {
+            .about-grid {
                 grid-template-columns: 1fr;
                 gap: 2.5rem;
             }
+
+
 
             .stats-bar {
                 display: grid;
@@ -974,9 +971,7 @@
                 font-size: 1.05rem;
             }
 
-            .art-visual {
-                padding: 2rem;
-            }
+
         }
 
         @media (max-width: 480px) {
@@ -1080,21 +1075,7 @@
                 padding: 0.2rem 0.6rem;
             }
 
-            .art-emoji {
-                font-size: 5rem;
-            }
 
-            .art-visual {
-                padding: 2rem 1.5rem;
-            }
-
-            .art-title {
-                font-size: 1.4rem;
-            }
-
-            .art-text {
-                font-size: 0.95rem;
-            }
 
             .contact-section {
                 padding: 4rem 1rem;
@@ -1208,11 +1189,94 @@
             pointer-events: none;
             z-index: 9999;
             animation: scanlineMove 8s linear infinite;
+            opacity: var(--onz-scanline-opacity);
         }
 
         @keyframes scanlineMove {
             0% { background-position: 0 0; }
             100% { background-position: 0 100%; }
+        }
+
+        .visitor-stats-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            padding: 1.2rem 2rem;
+            border-top: 1px solid var(--onz-card-border);
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .visitor-count {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--onz-cyan);
+            letter-spacing: 2px;
+        }
+
+        .visitor-last-time {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            color: var(--onz-silver);
+            letter-spacing: 1px;
+        }
+
+        .visitor-pulse-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .visitor-pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--onz-green);
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .visitor-pulse-dot::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            background: var(--onz-green);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: visitorPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes visitorPulse {
+            0%, 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0; transform: translate(-50%, -50%) scale(2.5); }
+        }
+
+        .visitor-pulse-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.7rem;
+            color: var(--onz-green);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 480px) {
+            .visitor-stats-bar {
+                flex-direction: column;
+                gap: 0.6rem;
+                padding: 1rem 1rem;
+            }
+
+            .visitor-count {
+                font-size: 0.8rem;
+            }
+
+            .visitor-last-time {
+                font-size: 0.75rem;
+            }
         }
 
         .noise {
@@ -1223,8 +1287,341 @@
             height: 100%;
             pointer-events: none;
             z-index: 998;
-            opacity: 0.03;
+            opacity: var(--onz-noise-opacity);
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .terminal-section {
+            background: var(--onz-section-bg);
+        }
+
+        .terminal-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(10, 10, 15, 0.95);
+            border: 1px solid rgba(0, 245, 255, 0.3);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 30px var(--onz-glow-color), 0 0 60px var(--onz-glow-color);
+            position: relative;
+        }
+
+        .terminal-header {
+            background: #1e1e2e;
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-bottom: 1px solid rgba(0, 245, 255, 0.15);
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .terminal-dot.red { background: #ff4500; }
+        .terminal-dot.yellow { background: #ffd700; }
+        .terminal-dot.green { background: #00ff88; }
+
+        .terminal-title {
+            font-family: 'Space Grotesk', monospace;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-left: 0.75rem;
+            letter-spacing: 1px;
+        }
+
+        .terminal-body {
+            position: relative;
+        }
+
+        .terminal-scanline {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                transparent 0%,
+                rgba(0, 255, 136, 0.015) 50%,
+                transparent 100%
+            );
+            background-size: 100% 3px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .terminal-output {
+            height: 350px;
+            overflow-y: auto;
+            padding: 1.25rem;
+            font-family: 'Space Grotesk', monospace;
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: #00ff88;
+            position: relative;
+        }
+
+        .terminal-output::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .terminal-output::-webkit-scrollbar-track {
+            background: rgba(0, 245, 255, 0.05);
+        }
+
+        .terminal-output::-webkit-scrollbar-thumb {
+            background: rgba(0, 245, 255, 0.2);
+            border-radius: 3px;
+        }
+
+        .terminal-output::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 245, 255, 0.4);
+        }
+
+        .terminal-line {
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .terminal-line.command-line {
+            color: #00f5ff;
+        }
+
+        .terminal-line.error-line {
+            color: #ff4500;
+        }
+
+        .terminal-line.info-line {
+            color: #ffd700;
+        }
+
+        .terminal-input-line {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.25rem;
+            border-top: 1px solid rgba(0, 245, 255, 0.1);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .terminal-prompt {
+            font-family: 'Space Grotesk', monospace;
+            font-size: 0.9rem;
+            color: #00f5ff;
+            white-space: nowrap;
+            margin-right: 0.5rem;
+        }
+
+        .terminal-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #00ff88;
+            font-family: 'Space Grotesk', monospace;
+            font-size: 0.9rem;
+            caret-color: #00ff88;
+        }
+
+        .terminal-input::placeholder {
+            color: rgba(0, 255, 136, 0.3);
+        }
+
+        @keyframes terminalBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .terminal-cursor {
+            display: inline-block;
+            width: 8px;
+            height: 1.1em;
+            background: #00ff88;
+            animation: terminalBlink 1s step-end infinite;
+            vertical-align: text-bottom;
+            margin-left: 1px;
+        }
+
+        .terminal-section.fade-in {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        .terminal-section.fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 968px) {
+            .terminal-output {
+                height: 280px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .terminal-container {
+                border-radius: 6px;
+            }
+
+            .terminal-output {
+                height: 220px;
+                padding: 1rem;
+                font-size: 0.8rem;
+            }
+
+            .terminal-input-line {
+                padding: 0.6rem 1rem;
+            }
+
+            .terminal-prompt,
+            .terminal-input {
+                font-size: 16px;
+            }
+
+            .terminal-header {
+                padding: 0.6rem 0.75rem;
+            }
+
+            .terminal-dot {
+                width: 10px;
+                height: 10px;
+            }
+
+            .terminal-title {
+                font-size: 0.7rem;
+            }
+        }
+
+        [data-theme="aurora"] .hero-description { color: var(--onz-text-muted); }
+        [data-theme="aurora"] .about-text p { color: var(--onz-text-secondary); }
+        [data-theme="aurora"] .stats-bar { background: var(--onz-card-bg); border-color: var(--onz-card-border); }
+        [data-theme="aurora"] .skill-card { background: var(--onz-card-bg); border-color: var(--onz-card-border); box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+        [data-theme="aurora"] .project-card { background: var(--onz-card-bg); border-color: var(--onz-card-border); box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+        [data-theme="aurora"] .project-tag { background: rgba(0,201,219,0.1); color: var(--onz-cyan); }
+        [data-theme="aurora"] .social-link { border-color: var(--onz-card-border); }
+        [data-theme="aurora"] .social-link:hover { color: #fff; }
+        [data-theme="aurora"] .btn-primary { color: #fff; }
+        [data-theme="aurora"] .terminal-container { background: rgba(10,10,15,0.95); }
+        [data-theme="aurora"] .contact-section { background: linear-gradient(180deg, transparent, var(--onz-dark), var(--onz-black)); }
+        [data-theme="aurora"] footer { border-top-color: var(--onz-card-border); }
+        [data-theme="aurora"] .visitor-stats-bar { border-top-color: var(--onz-card-border); }
+        [data-theme="aurora"] .visitor-count { color: var(--onz-cyan); }
+        [data-theme="aurora"] .visitor-last-time { color: var(--onz-text-muted); }
+
+        [data-theme="midnight"] .hero-description { color: var(--onz-text-muted); }
+        [data-theme="midnight"] .about-text p { color: var(--onz-text-secondary); }
+        [data-theme="midnight"] .stats-bar { background: var(--onz-card-bg); border-color: var(--onz-card-border); }
+        [data-theme="midnight"] .skill-card { background: var(--onz-card-bg); border-color: var(--onz-card-border); }
+        [data-theme="midnight"] .project-card { background: var(--onz-card-bg); border-color: var(--onz-card-border); }
+        [data-theme="midnight"] .project-tag { background: rgba(168,85,247,0.15); color: var(--onz-purple); }
+        [data-theme="midnight"] .social-link { border-color: var(--onz-card-border); }
+        [data-theme="midnight"] .contact-section { background: linear-gradient(180deg, transparent, var(--onz-dark), var(--onz-black)); }
+        [data-theme="midnight"] footer { border-top-color: var(--onz-card-border); }
+        [data-theme="midnight"] .visitor-stats-bar { border-top-color: var(--onz-card-border); }
+        [data-theme="midnight"] .visitor-count { color: var(--onz-purple); }
+        [data-theme="midnight"] .visitor-last-time { color: var(--onz-text-muted); }
+
+        .theme-fab {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            flex-direction: row-reverse;
+            gap: 0;
+        }
+        .theme-fab-main {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 3px solid var(--onz-cyan);
+            background: var(--onz-dark);
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 0 15px var(--onz-glow-color);
+            transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .theme-fab-main:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 25px var(--onz-glow-color);
+        }
+        .theme-fab-opt {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s, box-shadow 0.3s;
+            opacity: 0;
+            transform: scale(0) translateX(20px);
+            pointer-events: none;
+            margin-right: -8px;
+            flex-shrink: 0;
+        }
+        .theme-fab.open .theme-fab-opt {
+            opacity: 1;
+            transform: scale(1) translateX(0);
+            pointer-events: auto;
+        }
+        .theme-fab.open .theme-fab-opt:nth-child(2) { transition-delay: 0.03s; margin-right: 10px; }
+        .theme-fab.open .theme-fab-opt:nth-child(3) { transition-delay: 0.08s; margin-right: 10px; }
+        .theme-fab.open .theme-fab-opt:nth-child(4) { transition-delay: 0.13s; margin-right: 10px; }
+        .theme-fab-opt:hover {
+            transform: scale(1.15) translateX(0) !important;
+            box-shadow: 0 0 15px var(--onz-glow-color);
+        }
+        .theme-fab-opt[data-theme-val="cyberpunk"] {
+            background: linear-gradient(135deg, #00f5ff, #9d00ff);
+        }
+        .theme-fab-opt[data-theme-val="aurora"] {
+            background: linear-gradient(135deg, #ffffff, #00c9db);
+        }
+        .theme-fab-opt[data-theme-val="midnight"] {
+            background: linear-gradient(135deg, #a855f7, #0f0a1a);
+        }
+        .theme-fab-opt.active {
+            border-color: #fff;
+            box-shadow: 0 0 12px var(--onz-glow-color);
+        }
+        [data-theme="aurora"] .theme-fab-main { border-color: var(--onz-cyan); background: var(--onz-dark); }
+        [data-theme="midnight"] .theme-fab-main { border-color: var(--onz-purple); background: var(--onz-dark); }
+        @media (max-width: 480px) {
+            .theme-fab { bottom: 20px; right: 20px; }
+            .theme-fab-main { width: 44px; height: 44px; font-size: 18px; }
+            .theme-fab-opt { width: 36px; height: 36px; }
+        }
+        .copy-toast {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--onz-dark);
+            color: var(--onz-cyan);
+            border: 1px solid var(--onz-cyan);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 10000;
+            pointer-events: none;
+            box-shadow: 0 0 15px var(--onz-glow-color);
+        }
+        .copy-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
         }
     </style>
 </head>
@@ -1244,7 +1641,7 @@
 
     <nav>
         <div class="nav-container">
-            <a href="#" class="nav-logo">ONZ</a>
+            <a href="javascript:void(0)" class="nav-logo" onclick="window.scrollTo({top:0,behavior:'smooth'})">ONZ</a>
             <button class="nav-toggle" id="navToggle" aria-label="菜单">
                 <span></span>
                 <span></span>
@@ -1253,7 +1650,6 @@
             <ul class="nav-links" id="navLinks">
                 <li><a href="#about">关于</a></li>
                 <li><a href="#projects">项目</a></li>
-                <li><a href="#art">艺术</a></li>
                 <li><a href="#contact">联系</a></li>
             </ul>
         </div>
@@ -1325,6 +1721,30 @@
             </div>
         </section>
 
+        <section id="terminal" class="section terminal-section fade-in">
+            <div class="section-header">
+                <p class="section-label">赛博终端 <span class="section-label-en">/ Cyber Terminal</span></p>
+                <h2 class="section-title">赛博<span class="highlight">终端</span></h2>
+            </div>
+
+            <div class="terminal-container">
+                <div class="terminal-header">
+                    <span class="terminal-dot red"></span>
+                    <span class="terminal-dot yellow"></span>
+                    <span class="terminal-dot green"></span>
+                    <span class="terminal-title">onz@terminal ~ %</span>
+                </div>
+                <div class="terminal-body">
+                    <div class="terminal-scanline"></div>
+                    <div class="terminal-output" id="terminalOutput"></div>
+                </div>
+                <div class="terminal-input-line">
+                    <span class="terminal-prompt">onz@web:~$</span>
+                    <input type="text" class="terminal-input" id="terminalInput" placeholder="输入命令... (试试 help)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+                </div>
+            </div>
+        </section>
+
         <section id="projects" class="section projects-section fade-in">
             <div class="section-header">
                 <p class="section-label">作品集 <span class="section-label-en">/ Portfolio</span></p>
@@ -1381,40 +1801,9 @@
             </div>
         </section>
 
-        <section id="art" class="section art-section fade-in">
-            <div class="section-header">
-                <p class="section-label">创意探索 <span class="section-label-en">/ Creative Lab</span></p>
-                <h2 class="section-title">生成<span class="highlight">艺术</span></h2>
-            </div>
 
-            <div class="art-showcase">
-                <div class="art-visual">
-                    <div class="art-emoji">✨</div>
-                    <h3 class="art-title">数字涟漪 <span class="sub-title-en">Digital Ripples</span></h3>
-                    <p class="art-text">
-                        点击体验独特的交互式生成艺术。<br>
-                        数千个粒子在噪声场中流动，<br>
-                        创造属于你的数字视觉。
-                    </p>
-                    <span class="sub-text-en">Click to experience interactive generative art</span>
-                    <a href="digital-ripples.html" class="btn btn-primary" target="_blank">立即体验</a>
-                </div>
-                <div class="art-text-content">
-                    <h3 style="font-family: 'Orbitron', monospace; font-size: 1.8rem; margin-bottom: 1.5rem; color: var(--onz-orange);">
-                        代码即艺术 <span class="sub-title-en" style="font-size: 1rem;">Code is Art</span>
-                    </h3>
-                    <p style="color: rgba(255, 255, 255, 0.8); line-height: 2; margin-bottom: 1.5rem;">
-                        生成艺术是一种将算法转化为视觉体验的创作方式。通过精心的数学设计，
-                        代码可以创造出超越人类手绘的复杂图案与动态效果。
-                    </p>
-                    <p style="color: rgba(255, 255, 255, 0.8); line-height: 2;">
-                        每一个作品都是独一无二的——相同的算法，不同的随机种子，
-                        就能诞生无限可能的视觉宇宙。这正是数字艺术的魅力所在。
-                    </p>
-                    <span class="sub-text-en">Generative art transforms algorithms into visual experiences</span>
-                </div>
-            </div>
-        </section>
+
+
 
         <section id="contact" class="contact-section fade-in">
             <div class="contact-content">
@@ -1428,10 +1817,10 @@
                     Have a creative project in mind? Let's collaborate
                 </span>
                 <div class="social-links">
-                    <a href="#" class="social-link" title="GitHub">📦</a>
-                    <a href="#" class="social-link" title="Twitter">🐦</a>
-                    <a href="#" class="social-link" title="LinkedIn">💼</a>
-                    <a href="#" class="social-link" title="Dribbble">🎨</a>
+                    <a href="javascript:void(0)" class="social-link" title="点击复制邮箱" onclick="copyEmail()">📦</a>
+                    <a href="javascript:void(0)" class="social-link" title="点击复制邮箱" onclick="copyEmail()">🐦</a>
+                    <a href="javascript:void(0)" class="social-link" title="点击复制邮箱" onclick="copyEmail()">💼</a>
+                    <a href="javascript:void(0)" class="social-link" title="点击复制邮箱" onclick="copyEmail()">🎨</a>
                 </div>
                 <a href="mailto:onz@creative.space" class="contact-email">onz@creative.space</a>
             </div>
@@ -1439,6 +1828,14 @@
     </div>
 
     <footer>
+        <div class="visitor-stats-bar">
+            <span class="visitor-count" id="visitorCount"></span>
+            <span class="visitor-last-time" id="visitorLastTime"></span>
+            <div class="visitor-pulse-wrapper">
+                <span class="visitor-pulse-dot"></span>
+                <span class="visitor-pulse-label">Online</span>
+            </div>
+        </div>
         <p>© 2026 <span class="onz-footer">ONZ</span> | 用代码创造未来</p>
     </footer>
 
@@ -1481,7 +1878,7 @@
 
                     setTimeout(function() {
                         if (entryEl && entryEl.parentNode) entryEl.parentNode.removeChild(entryEl);
-                        document.documentElement.style.background = '#0a0a0f';
+                        document.documentElement.style.background = '';
                     }, 1400);
                 });
             } else {
@@ -1513,11 +1910,32 @@
         let time = 0;
         let mouseX = window.innerWidth / 2;
         let mouseY = window.innerHeight / 2;
+        let isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        let targetParticleCount = isTouchDevice ? 40 : 80;
+        let frameCount = 0;
+        let lastFpsUpdate = 0;
+        let currentFps = 60;
+
+        function updateMousePos(x, y) {
+            mouseX = x;
+            mouseY = y;
+        }
 
         document.addEventListener('mousemove', e => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
+            updateMousePos(e.clientX, e.clientY);
         });
+
+        document.addEventListener('touchmove', e => {
+            if (e.touches.length > 0) {
+                updateMousePos(e.touches[0].clientX, e.touches[0].clientY);
+            }
+        }, { passive: true });
+
+        document.addEventListener('touchstart', e => {
+            if (e.touches.length > 0) {
+                updateMousePos(e.touches[0].clientX, e.touches[0].clientY);
+            }
+        }, { passive: true });
 
         document.addEventListener('contextmenu', e => {
             e.preventDefault();
@@ -1547,9 +1965,9 @@
             constructor() {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2.5 + 1;
-                this.speedX = (Math.random() - 0.5) * 0.5;
-                this.speedY = (Math.random() - 0.5) * 0.5;
+                this.size = Math.random() * 2 + 0.8;
+                this.speedX = (Math.random() - 0.5) * 0.4;
+                this.speedY = (Math.random() - 0.5) * 0.4;
                 this.color = ['#00f5ff', '#9d00ff', '#ff4500'][Math.floor(Math.random() * 3)];
             }
 
@@ -1558,11 +1976,12 @@
                 const dy = mouseY - this.y;
                 const dist = Math.sqrt(dx * dx + dy * dy);
                 if (dist > 1) {
-                    this.speedX += dx / dist * 0.015;
-                    this.speedY += dy / dist * 0.015;
+                    const attraction = isTouchDevice ? 0.012 : 0.015;
+                    this.speedX += dx / dist * attraction;
+                    this.speedY += dy / dist * attraction;
                 }
-                this.speedX *= 0.99;
-                this.speedY *= 0.99;
+                this.speedX *= 0.985;
+                this.speedY *= 0.985;
                 this.x += this.speedX;
                 this.y += this.speedY;
 
@@ -1574,18 +1993,48 @@
 
             draw() {
                 ctx.fillStyle = this.color;
-                ctx.globalAlpha = 0.3;
+                ctx.globalAlpha = 0.35;
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                 ctx.fill();
             }
         }
 
-        for (let i = 0; i < 80; i++) {
-            particles.push(new Particle());
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < targetParticleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        initParticles();
+
+        function adjustParticleCount(target) {
+            while (particles.length < target) {
+                particles.push(new Particle());
+            }
+            while (particles.length > target) {
+                particles.pop();
+            }
         }
 
         function animate() {
+            frameCount++;
+            const now = performance.now();
+            if (now - lastFpsUpdate >= 1000) {
+                currentFps = frameCount;
+                frameCount = 0;
+                lastFpsUpdate = now;
+
+                if (currentFps < 28 && targetParticleCount > 15) {
+                    targetParticleCount = Math.max(15, targetParticleCount - 5);
+                    adjustParticleCount(targetParticleCount);
+                } else if (currentFps > 50 && targetParticleCount < (isTouchDevice ? 60 : 100)) {
+                    targetParticleCount += 5;
+                    adjustParticleCount(targetParticleCount);
+                }
+            }
+
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
             particles.forEach(particle => {
@@ -1593,10 +2042,13 @@
                 particle.draw();
             });
 
-            const maxDist = 150;
+            const maxDist = isTouchDevice ? 120 : 150;
             const maxDistSq = maxDist * maxDist;
-            for (let i = 0; i < particles.length; i++) {
-                for (let j = i + 1; j < particles.length; j++) {
+            const connectionCount = Math.min(particles.length * 2, isTouchDevice ? 100 : 150);
+            let drawnConnections = 0;
+
+            for (let i = 0; i < particles.length && drawnConnections < connectionCount; i++) {
+                for (let j = i + 1; j < particles.length && drawnConnections < connectionCount; j++) {
                     const dx = particles[i].x - particles[j].x;
                     if (dx > maxDist || dx < -maxDist) continue;
                     const dy = particles[i].y - particles[j].y;
@@ -1605,12 +2057,13 @@
                     if (distSq < maxDistSq) {
                         const distance = Math.sqrt(distSq);
                         ctx.strokeStyle = '#00f5ff';
-                        ctx.globalAlpha = 0.1 * (1 - distance / maxDist);
-                        ctx.lineWidth = 0.5;
+                        ctx.globalAlpha = (isTouchDevice ? 0.08 : 0.1) * (1 - distance / maxDist);
+                        ctx.lineWidth = 0.4;
                         ctx.beginPath();
                         ctx.moveTo(particles[i].x, particles[i].y);
                         ctx.lineTo(particles[j].x, particles[j].y);
                         ctx.stroke();
+                        drawnConnections++;
                     }
                 }
             }
@@ -1633,6 +2086,8 @@
         document.querySelectorAll('.fade-in').forEach(el => {
             observer.observe(el);
         });
+
+
 
         // 移动端导航菜单
         const navToggle = document.getElementById('navToggle');
@@ -1658,6 +2113,315 @@
                 }
             });
         });
+
+        // 赛博终端
+        (function() {
+            var output = document.getElementById('terminalOutput');
+            var input = document.getElementById('terminalInput');
+            var commandHistory = [];
+            var historyIndex = -1;
+            var isTyping = false;
+
+            function addLine(text, className) {
+                var line = document.createElement('div');
+                line.className = 'terminal-line' + (className ? ' ' + className : '');
+                line.textContent = text;
+                output.appendChild(line);
+                output.scrollTop = output.scrollHeight;
+            }
+
+            function typewriterLine(text, className, callback) {
+                isTyping = true;
+                var line = document.createElement('div');
+                line.className = 'terminal-line' + (className ? ' ' + className : '');
+                output.appendChild(line);
+                var i = 0;
+                function type() {
+                    if (i < text.length) {
+                        line.textContent += text.charAt(i);
+                        i++;
+                        output.scrollTop = output.scrollHeight;
+                        setTimeout(type, 30);
+                    } else {
+                        isTyping = false;
+                        if (callback) callback();
+                    }
+                }
+                type();
+            }
+
+            function clearTerminal() {
+                output.innerHTML = '';
+            }
+
+            function showHelp() {
+                var lines = [
+                    '可用命令 / Available Commands:',
+                    '',
+                    '  help     - 显示此帮助信息',
+                    '  about    - 关于我',
+                    '  skills   - 查看技能列表',
+                    '  matrix   - 启动矩阵雨动画',
+                    '  date     - 显示当前日期时间',
+                    '  echo     - 回显文本 (用法: echo [text])',
+                    '  clear    - 清空终端',
+                    ''
+                ];
+                lines.forEach(function(l) { addLine(l, 'info-line'); });
+            }
+
+            function showAbout() {
+                typewriterLine('创意开发者，专注于创意编程与生成艺术。用代码构建数字世界，用算法创造视觉奇迹。');
+            }
+
+            function showSkills() {
+                var skills = ['创意编程', '生成艺术', '交互设计', '数据可视化', '赛博朋克美学'];
+                addLine('技能列表 / Skills:', 'info-line');
+                addLine('');
+                skills.forEach(function(skill, idx) {
+                    addLine('  [' + (idx + 1) + '] ' + skill);
+                });
+                addLine('');
+            }
+
+            function showDate() {
+                var now = new Date();
+                addLine(now.toLocaleString('zh-CN', {
+                    year: 'numeric', month: '2-digit', day: '2-digit',
+                    hour: '2-digit', minute: '2-digit', second: '2-digit'
+                }));
+            }
+
+            function echoText(text) {
+                addLine(text || '');
+            }
+
+            function matrixRain() {
+                var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*<>{}[]|/\\~';
+                var cols = Math.floor(output.clientWidth / 10);
+                var drops = [];
+                for (var i = 0; i < cols; i++) {
+                    drops[i] = Math.floor(Math.random() * 20);
+                }
+
+                var canvas = document.createElement('canvas');
+                canvas.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;z-index:2;pointer-events:none;';
+                canvas.width = output.clientWidth;
+                canvas.height = output.clientHeight;
+                output.style.position = 'relative';
+                output.appendChild(canvas);
+
+                var mCtx = canvas.getContext('2d');
+                var startTime = Date.now();
+
+                function drawMatrix() {
+                    mCtx.fillStyle = 'rgba(10, 10, 15, 0.1)';
+                    mCtx.fillRect(0, 0, canvas.width, canvas.height);
+                    mCtx.fillStyle = '#00ff88';
+                    mCtx.font = '12px monospace';
+
+                    for (var i = 0; i < drops.length; i++) {
+                        var char = chars[Math.floor(Math.random() * chars.length)];
+                        mCtx.fillStyle = Math.random() > 0.95 ? '#00f5ff' : '#00ff88';
+                        mCtx.fillText(char, i * 10, drops[i] * 12);
+                        if (drops[i] * 12 > canvas.height && Math.random() > 0.975) {
+                            drops[i] = 0;
+                        }
+                        drops[i]++;
+                    }
+
+                    if (Date.now() - startTime < 3000) {
+                        requestAnimationFrame(drawMatrix);
+                    } else {
+                        if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
+                        clearTerminal();
+                        addLine('矩阵雨已结束 / Matrix rain ended', 'info-line');
+                    }
+                }
+
+                drawMatrix();
+            }
+
+            function processCommand(cmd) {
+                var trimmed = cmd.trim();
+                if (!trimmed) return;
+
+                commandHistory.push(trimmed);
+                if (commandHistory.length > 10) commandHistory.shift();
+                historyIndex = commandHistory.length;
+
+                addLine('onz@web:~$ ' + trimmed, 'command-line');
+
+                var parts = trimmed.split(/\s+/);
+                var command = parts[0].toLowerCase();
+                var args = parts.slice(1).join(' ');
+
+                switch (command) {
+                    case 'help':
+                        showHelp();
+                        break;
+                    case 'about':
+                        showAbout();
+                        break;
+                    case 'skills':
+                        showSkills();
+                        break;
+                    case 'matrix':
+                        matrixRain();
+                        break;
+                    case 'clear':
+                        clearTerminal();
+                        break;
+                    case 'date':
+                        showDate();
+                        break;
+                    case 'echo':
+                        echoText(args);
+                        break;
+                    default:
+                        addLine('onz: command not found: ' + command + ". Type 'help' for available commands.", 'error-line');
+                }
+            }
+
+            input.addEventListener('keydown', function(e) {
+                if (isTyping) {
+                    e.preventDefault();
+                    return;
+                }
+
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    var cmd = input.value;
+                    input.value = '';
+                    processCommand(cmd);
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    if (historyIndex > 0) {
+                        historyIndex--;
+                        input.value = commandHistory[historyIndex];
+                    }
+                } else if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    if (historyIndex < commandHistory.length - 1) {
+                        historyIndex++;
+                        input.value = commandHistory[historyIndex];
+                    } else {
+                        historyIndex = commandHistory.length;
+                        input.value = '';
+                    }
+                }
+            });
+
+            output.addEventListener('click', function() {
+                input.focus();
+            });
+        })();
+
+        (function() {
+            var STORAGE_KEY = 'onz_visitor';
+            var countEl = document.getElementById('visitorCount');
+            var lastTimeEl = document.getElementById('visitorLastTime');
+            var now = new Date();
+
+            function formatTime(date) {
+                var y = date.getFullYear();
+                var m = String(date.getMonth() + 1).padStart(2, '0');
+                var d = String(date.getDate()).padStart(2, '0');
+                var h = String(date.getHours()).padStart(2, '0');
+                var min = String(date.getMinutes()).padStart(2, '0');
+                return y + '-' + m + '-' + d + ' ' + h + ':' + min;
+            }
+
+            var stored = null;
+            try {
+                stored = JSON.parse(localStorage.getItem(STORAGE_KEY));
+            } catch(e) {}
+
+            if (!stored || typeof stored.count !== 'number') {
+                countEl.textContent = '欢迎来到 ONZ 空间';
+                lastTimeEl.textContent = '';
+                localStorage.setItem(STORAGE_KEY, JSON.stringify({ count: 1, lastVisit: now.toISOString() }));
+            } else {
+                var newCount = stored.count + 1;
+                countEl.textContent = '第 ' + newCount + ' 次访问';
+                if (stored.lastVisit) {
+                    var lastDate = new Date(stored.lastVisit);
+                    lastTimeEl.textContent = '上次访问: ' + formatTime(lastDate);
+                }
+                localStorage.setItem(STORAGE_KEY, JSON.stringify({ count: newCount, lastVisit: now.toISOString() }));
+            }
+        })();
+    </script>
+    <script>
+        function copyEmail() {
+            var email = 'onz@creative.space';
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(email).then(function() { showToast('已复制邮箱: ' + email); });
+            } else {
+                var ta = document.createElement('textarea');
+                ta.value = email;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                showToast('已复制邮箱: ' + email);
+            }
+        }
+        function showToast(msg) {
+            var existing = document.querySelector('.copy-toast');
+            if (existing) existing.remove();
+            var toast = document.createElement('div');
+            toast.className = 'copy-toast';
+            toast.textContent = msg;
+            document.body.appendChild(toast);
+            setTimeout(function() { toast.classList.add('show'); }, 10);
+            setTimeout(function() { toast.classList.remove('show'); setTimeout(function() { toast.remove(); }, 300); }, 2500);
+        }
+    </script>
+
+    <div class="theme-fab" id="themeFab">
+        <button class="theme-fab-main" id="themeFabMain" aria-label="切换主题">🎨</button>
+        <button class="theme-fab-opt" data-theme-val="cyberpunk" aria-label="赛博朋克主题" title="赛博朋克"></button>
+        <button class="theme-fab-opt" data-theme-val="aurora" aria-label="极光白主题" title="极光白"></button>
+        <button class="theme-fab-opt" data-theme-val="midnight" aria-label="暗夜紫主题" title="暗夜紫"></button>
+    </div>
+
+    <script>
+    (function(){
+        var fab = document.getElementById('themeFab');
+        var mainBtn = document.getElementById('themeFabMain');
+        var opts = fab.querySelectorAll('.theme-fab-opt');
+        var currentTheme = document.documentElement.getAttribute('data-theme') || 'cyberpunk';
+
+        function updateActive() {
+            opts.forEach(function(o) {
+                o.classList.toggle('active', o.getAttribute('data-theme-val') === currentTheme);
+            });
+        }
+        updateActive();
+
+        mainBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            fab.classList.toggle('open');
+        });
+
+        opts.forEach(function(o) {
+            o.addEventListener('click', function(e) {
+                e.stopPropagation();
+                currentTheme = o.getAttribute('data-theme-val');
+                document.documentElement.setAttribute('data-theme', currentTheme);
+                try { localStorage.setItem('onz_theme', currentTheme); } catch(ex) {}
+                updateActive();
+                fab.classList.remove('open');
+            });
+        });
+
+        document.addEventListener('click', function() {
+            fab.classList.remove('open');
+        });
+
+        fab.addEventListener('click', function(e) { e.stopPropagation(); });
+    })();
     </script>
 </body>
 </html>

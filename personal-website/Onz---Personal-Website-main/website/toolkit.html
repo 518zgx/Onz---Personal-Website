@@ -1,0 +1,1799 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>(function(){var t='cyberpunk';try{var s=localStorage.getItem('onz_theme');if(s==='aurora'||s==='midnight'||s==='cyberpunk')t=s;}catch(e){}document.documentElement.setAttribute('data-theme',t);})();</script>
+    <title>ONZ | Creative Toolkit</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --onz-black: #0a0a0f; --onz-dark: #1a1a2e; --onz-cyan: #00f5ff; --onz-purple: #9d00ff;
+            --onz-orange: #ff4500; --onz-green: #00ff88; --onz-silver: #c0c0c0;
+            --onz-card-bg: rgba(26,26,46,0.6); --onz-card-border: rgba(0,245,255,0.15);
+            --onz-text-primary: #ffffff; --onz-text-secondary: rgba(255,255,255,0.7); --onz-text-muted: rgba(255,255,255,0.5);
+            --onz-scanline-opacity: 0.03; --onz-noise-opacity: 0.03; --onz-glow-color: rgba(0,245,255,0.3);
+            --onz-nav-bg: rgba(10,10,15,0.85); --onz-canvas-bg: #050510; --onz-workspace-bg: rgba(10,10,15,0.95);
+            --onz-control-bg: rgba(0,0,0,0.3); --onz-control-border: rgba(0,245,255,0.2);
+        }
+        [data-theme="aurora"] {
+            --onz-black: #f8f9fc; --onz-dark: #ffffff; --onz-cyan: #00c9db; --onz-purple: #7c3aed;
+            --onz-orange: #f97316; --onz-green: #10b981; --onz-silver: #374151;
+            --onz-card-bg: rgba(255,255,255,0.9); --onz-card-border: rgba(0,0,0,0.08);
+            --onz-text-primary: #1a1a2e; --onz-text-secondary: rgba(0,0,0,0.6); --onz-text-muted: rgba(0,0,0,0.4);
+            --onz-scanline-opacity: 0; --onz-noise-opacity: 0; --onz-glow-color: rgba(0,201,219,0.15);
+            --onz-nav-bg: rgba(248,249,252,0.9); --onz-canvas-bg: #f0f0f5; --onz-workspace-bg: rgba(248,249,252,0.95);
+            --onz-control-bg: rgba(0,0,0,0.04); --onz-control-border: rgba(0,0,0,0.12);
+        }
+        [data-theme="midnight"] {
+            --onz-black: #0f0a1a; --onz-dark: #1a1030; --onz-cyan: #06b6d4; --onz-purple: #a855f7;
+            --onz-orange: #f43f5e; --onz-green: #fbbf24; --onz-silver: #d4d4d8;
+            --onz-card-bg: rgba(26,16,48,0.6); --onz-card-border: rgba(168,85,247,0.2);
+            --onz-text-primary: #e8e8f0; --onz-text-secondary: rgba(255,255,255,0.65); --onz-text-muted: rgba(255,255,255,0.4);
+            --onz-scanline-opacity: 0.015; --onz-noise-opacity: 0.02; --onz-glow-color: rgba(168,85,247,0.3);
+            --onz-nav-bg: rgba(15,10,26,0.9); --onz-canvas-bg: #0a0515; --onz-workspace-bg: rgba(15,10,26,0.95);
+            --onz-control-bg: rgba(168,85,247,0.1); --onz-control-border: rgba(168,85,247,0.2);
+        }
+
+
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--onz-black); color: var(--onz-text-primary);
+            min-height: 100vh; overflow-x: hidden;
+        }
+        body::before {
+            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background:
+                linear-gradient(90deg, rgba(0,245,255,0.03) 1px, transparent 1px),
+                linear-gradient(rgba(0,245,255,0.03) 1px, transparent 1px);
+            background-size: 50px 50px; pointer-events: none; z-index: 0;
+        }
+        .scanline {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, transparent 0%, rgba(0,245,255,0.02) 50%, transparent 100%);
+            background-size: 100% 4px; pointer-events: none; z-index: 1000;
+            animation: scanlineMove 8s linear infinite;
+            opacity: var(--onz-scanline-opacity);
+        }
+        @keyframes scanlineMove { 0%{background-position:0 0} 100%{background-position:0 100%} }
+
+        .noise {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 998; opacity: var(--onz-noise-opacity);
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        nav {
+            position: fixed; top: 0; left: 0; right: 0;
+            background: var(--onz-nav-bg); backdrop-filter: blur(20px);
+            z-index: 1000; padding: 1.5rem 3rem;
+            border-bottom: 1px solid var(--onz-control-border);
+        }
+        .nav-container {
+            max-width: 1400px; margin: 0 auto;
+            display: flex; align-items: center; gap: 1.5rem;
+        }
+        .nav-logo {
+            font-family: 'Orbitron', monospace; font-size: 1.8rem; font-weight: 900;
+            background: linear-gradient(135deg, var(--onz-cyan), var(--onz-purple));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; letter-spacing: 4px; text-decoration: none;
+            margin-right: auto;
+        }
+        .nav-links { display: flex; gap: 3rem; list-style: none; }
+        .nav-links a {
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--onz-silver); text-decoration: none;
+            font-weight: 500; font-size: 1rem; letter-spacing: 2px;
+            text-transform: uppercase; transition: color 0.3s ease;
+            position: relative; padding: 0.5rem 0;
+        }
+        .nav-links a::before {
+            content: '//'; color: var(--onz-cyan);
+            margin-right: 0.5rem; opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .nav-links a:hover { color: var(--onz-cyan); }
+        .nav-links a:hover::before { opacity: 1; }
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            z-index: 1001;
+        }
+        .nav-toggle span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--onz-cyan);
+            transition: all 0.3s ease;
+        }
+        .nav-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        .nav-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .nav-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        .header { padding: 10rem 2rem 3rem; text-align: center; }
+        .header-title {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(2.5rem, 8vw, 5rem); font-weight: 900; margin-bottom: 1rem;
+        }
+        .header-title .lc { color: var(--onz-cyan); text-shadow: 0 0 40px rgba(0,245,255,0.8); }
+        .header-title .lp { color: var(--onz-purple); text-shadow: 0 0 40px rgba(157,0,255,0.8); }
+        .header-title .lo { color: var(--onz-orange); text-shadow: 0 0 40px rgba(255,69,0,0.8); }
+        .header-title .lg { color: var(--onz-green); text-shadow: 0 0 40px rgba(0,255,136,0.8); }
+        .header-subtitle {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.2rem; color: var(--onz-silver); letter-spacing: 4px;
+        }
+
+        .tools-grid {
+            max-width: 1200px; margin: 0 auto; padding: 2rem;
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .tool-card {
+            background: var(--onz-card-bg);
+            border: 1px solid var(--onz-card-border);
+            border-radius: 8px; overflow: hidden;
+            cursor: pointer; transition: all 0.4s ease; position: relative;
+        }
+        .tool-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(90deg, var(--onz-cyan), var(--onz-purple), var(--onz-orange));
+        }
+        .tool-card:hover {
+            transform: translateY(-10px); border-color: var(--onz-cyan);
+            box-shadow: 0 20px 50px var(--onz-glow-color);
+        }
+        .tool-visual {
+            height: 200px; display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, rgba(0,245,255,0.05), rgba(157,0,255,0.05));
+            position: relative; overflow: hidden;
+        }
+        .tool-visual canvas { border-radius: 8px; max-width: 100%; height: auto; }
+        .tool-info { padding: 1.5rem; }
+        .tool-title {
+            font-family: 'Orbitron', monospace; font-size: 1.2rem;
+            font-weight: 600; margin-bottom: 0.5rem; color: var(--onz-cyan);
+        }
+        .tool-desc { font-size: 0.9rem; color: var(--onz-silver); line-height: 1.6; margin-bottom: 0.8rem; }
+        .tool-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .tool-tag {
+            font-family: 'Space Grotesk', sans-serif; font-size: 0.7rem;
+            padding: 0.25rem 0.7rem;
+            background: rgba(0,245,255,0.1); border: 1px solid rgba(0,245,255,0.3);
+            color: var(--onz-cyan); border-radius: 15px;
+        }
+
+        #tool-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--onz-workspace-bg); z-index: 1999; backdrop-filter: blur(15px);
+            overflow-y: auto;
+            animation: overlayIn 0.3s ease;
+        }
+        @keyframes overlayIn { from { opacity: 0; } to { opacity: 1; } }
+        .tool-page {
+            display: none; max-width: 900px; margin: 0 auto; padding: 6rem 2rem 4rem;
+        }
+        .tool-page-header {
+            display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;
+        }
+        .tool-page-back {
+            font-family: 'Orbitron', monospace; font-size: 0.75rem;
+            font-weight: 600; letter-spacing: 2px;
+            color: var(--onz-cyan); cursor: pointer; padding: 0.5rem 1.2rem;
+            border: 2px solid rgba(0,245,255,0.3); border-radius: 6px;
+            background: transparent; transition: all 0.3s ease;
+        }
+        .tool-page-back:hover { background: rgba(0,245,255,0.1); box-shadow: 0 0 20px rgba(0,245,255,0.5); }
+        .tool-page-title {
+            font-family: 'Orbitron', monospace; font-size: 1.8rem;
+            color: var(--onz-cyan);
+        }
+
+        .tool-workspace {
+            background: var(--onz-card-bg); border: 1px solid var(--onz-card-border);
+            border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem;
+        }
+        .tool-controls {
+            display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;
+            margin-bottom: 1.5rem; padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(0,245,255,0.1);
+        }
+        .ctrl-group { display: flex; flex-direction: column; gap: 0.3rem; }
+        .ctrl-label {
+            font-family: 'Space Grotesk', sans-serif; font-size: 0.75rem;
+            color: var(--onz-silver); letter-spacing: 1px; text-transform: uppercase;
+        }
+        .ctrl-btn {
+            padding: 0.6rem 1.5rem;
+            border: 2px solid rgba(0,245,255,0.3); border-radius: 6px;
+            background: transparent; color: var(--onz-cyan);
+            font-family: 'Orbitron', monospace; font-size: 0.8rem;
+            font-weight: 600; letter-spacing: 2px;
+            cursor: pointer; transition: all 0.3s ease;
+        }
+        .ctrl-btn:hover { background: rgba(0,245,255,0.1); box-shadow: 0 0 20px rgba(0,245,255,0.5); }
+        .ctrl-btn-primary {
+            background: var(--onz-cyan); color: var(--onz-black);
+            border-color: var(--onz-cyan); font-weight: 600;
+        }
+        .ctrl-btn-primary:hover { background: #00d4dd; }
+        .ctrl-select {
+            padding: 0.5rem 0.8rem;
+            background: var(--onz-control-bg); border: 1px solid var(--onz-control-border);
+            border-radius: 6px; color: var(--onz-cyan);
+            font-family: 'Space Grotesk', sans-serif; cursor: pointer;
+        }
+        .ctrl-select option { background: #1a1a2e; }
+        .ctrl-range {
+            width: 120px; height: 6px;
+            background: rgba(0,245,255,0.2); border-radius: 3px;
+            appearance: none; -webkit-appearance: none; cursor: pointer;
+        }
+        .ctrl-range::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none;
+            width: 14px; height: 14px;
+            background: var(--onz-cyan); border-radius: 50%; cursor: pointer;
+        }
+        .ctrl-range::-moz-range-thumb {
+            width: 14px; height: 14px;
+            background: var(--onz-cyan); border-radius: 50%; cursor: pointer; border: none;
+        }
+        .ctrl-range::-moz-range-track {
+            background: rgba(0,245,255,0.2); border-radius: 3px; height: 6px;
+        }
+        .ctrl-input {
+            padding: 0.5rem 0.8rem;
+            background: var(--onz-control-bg); border: 1px solid var(--onz-control-border);
+            border-radius: 6px; color: var(--onz-cyan);
+            font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem;
+        }
+        .ctrl-input:focus { outline: none; border-color: var(--onz-cyan); box-shadow: 0 0 10px rgba(0,245,255,0.2); }
+        input[type="color"] {
+            width: 40px; height: 34px; border: none; border-radius: 6px;
+            cursor: pointer; background: transparent;
+        }
+        input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+        input[type="color"]::-webkit-color-swatch { border: 2px solid var(--onz-cyan); border-radius: 4px; }
+
+        .ctrl-btn, .ctrl-select, .ctrl-input, .tool-page-back, .tool-card, input[type="color"] {
+            touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+        }
+        .pal-swatch { width: 80px; text-align: center; cursor: pointer; transition: transform 0.2s; }
+        .pal-swatch:hover { transform: scale(1.08); }
+        .pal-swatch-color { width: 80px; height: 80px; border-radius: 8px; margin-bottom: 0.5rem; border: 1px solid rgba(255,255,255,0.2); }
+        .pal-swatch-label { font-family: 'Space Grotesk', monospace; font-size: 0.75rem; color: #c0c0c0; }
+        .px-pal-color { width: 24px; height: 24px; border: 1px solid rgba(255,255,255,0.3); border-radius: 4px; cursor: pointer; transition: transform 0.2s; display: inline-block; }
+        .px-pal-color:hover { transform: scale(1.2); }
+
+        .tool-canvas-wrap {
+            display: flex; justify-content: center; margin-bottom: 1rem;
+            overflow-x: auto;
+        }
+        .tool-canvas-wrap canvas {
+            border: 1px solid rgba(0,245,255,0.3); border-radius: 8px;
+            background: var(--onz-canvas-bg); max-width: 100%; height: auto;
+        }
+        .code-output {
+            background: rgba(0,0,0,0.5); border-radius: 8px; padding: 1rem;
+            margin-top: 1rem; position: relative;
+        }
+        .code-output pre {
+            font-family: 'Space Grotesk', monospace; font-size: 0.8rem;
+            color: var(--onz-green); white-space: pre-wrap; word-break: break-all;
+        }
+        .code-copy {
+            position: absolute; top: 0.5rem; right: 0.5rem;
+            padding: 0.3rem 0.8rem; font-size: 0.75rem;
+        }
+
+        .footer {
+            text-align: center; padding: 4rem 2rem;
+            border-top: 1px solid rgba(0,245,255,0.1); margin-top: 4rem;
+        }
+        .footer p { font-family: 'Space Grotesk', sans-serif; color: var(--onz-silver); font-size: 0.9rem; }
+        .footer .onz-footer { font-family: 'Orbitron', monospace; font-weight: 700; color: var(--onz-cyan); }
+
+        [data-theme="aurora"] .tool-card { background: var(--onz-card-bg); border-color: var(--onz-card-border); box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+        [data-theme="aurora"] .tool-tag { background: rgba(0,201,219,0.1); color: var(--onz-cyan); }
+        [data-theme="aurora"] .tool-workspace { background: var(--onz-workspace-bg); }
+        [data-theme="aurora"] .ctrl-btn { border-color: var(--onz-control-border); }
+        [data-theme="aurora"] .ctrl-select { background: var(--onz-control-bg); border-color: var(--onz-control-border); }
+        [data-theme="aurora"] .ctrl-input { background: var(--onz-control-bg); border-color: var(--onz-control-border); }
+        [data-theme="aurora"] .code-output { background: rgba(0,0,0,0.04); }
+        [data-theme="midnight"] .tool-card { background: var(--onz-card-bg); border-color: var(--onz-card-border); }
+        [data-theme="midnight"] .tool-tag { background: rgba(168,85,247,0.15); color: var(--onz-purple); }
+        [data-theme="midnight"] .tool-workspace { background: var(--onz-workspace-bg); }
+        [data-theme="midnight"] .ctrl-btn { border-color: var(--onz-control-border); }
+        [data-theme="midnight"] .ctrl-select { background: var(--onz-control-bg); border-color: var(--onz-control-border); }
+        [data-theme="midnight"] .ctrl-input { background: var(--onz-control-bg); border-color: var(--onz-control-border); }
+
+        @media (min-width: 1400px) {
+            .tools-grid { max-width: 1400px; gap: 2.5rem; }
+            .tool-page { max-width: 1100px; }
+            .header { padding: 12rem 2rem 4rem; }
+        }
+
+        @media (max-width: 768px) {
+            nav { padding: 1rem 1.5rem; }
+            .nav-links {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100vh;
+                background: var(--onz-nav-bg);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 2.5rem;
+                z-index: 999;
+            }
+            .nav-links.mobile-open {
+                display: flex;
+            }
+            .nav-links.mobile-open a {
+                font-size: 1.4rem;
+                padding: 0.75rem 1rem;
+                min-height: 44px;
+                display: flex;
+                align-items: center;
+            }
+            .nav-toggle {
+                display: flex;
+                min-width: 44px;
+                min-height: 44px;
+                align-items: center;
+                justify-content: center;
+            }
+            .tools-grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; padding: 1.5rem; }
+            .header { padding: 8rem 1.5rem 2rem; }
+            .header-subtitle { font-size: 1rem; letter-spacing: 2px; }
+            .tool-page { padding: 5rem 1rem 2rem; }
+            .tool-page-title { font-size: 1.4rem; }
+            .tool-workspace { padding: 1.5rem; }
+            .tool-controls { gap: 0.8rem; }
+            .ctrl-btn { padding: 0.7rem 1.2rem; min-height: 44px; }
+            .ctrl-range { width: 140px; }
+            .ctrl-select { min-height: 44px; padding: 0.6rem 0.8rem; }
+            .ctrl-input { min-height: 44px; padding: 0.6rem 0.8rem; }
+            .tool-page-back { min-height: 44px; padding: 0.6rem 1.2rem; }
+            .code-output pre { font-size: 0.75rem; }
+            .tool-visual { height: 160px; }
+            .pal-swatch { width: 60px; }
+            .pal-swatch-color { width: 60px; height: 60px; }
+            .px-pal-color { width: 32px; height: 32px; }
+        }
+
+        @media (max-width: 480px) {
+            nav { padding: 0.8rem 1rem; }
+            .nav-logo { font-size: 1.4rem; letter-spacing: 2px; }
+            .tools-grid { grid-template-columns: 1fr; gap: 1rem; padding: 1rem; }
+            .header { padding: 7rem 1rem 1.5rem; }
+            .header-subtitle { font-size: 0.85rem; letter-spacing: 1px; }
+            .tool-page { padding: 4.5rem 0.5rem 2rem; }
+            .tool-page-header { flex-wrap: wrap; gap: 0.5rem; }
+            .tool-page-title { font-size: 1.1rem; }
+            .tool-workspace { padding: 0.75rem; }
+            .tool-controls {
+                flex-direction: column; align-items: stretch; gap: 0.75rem;
+            }
+            .ctrl-group { width: 100%; }
+            .ctrl-range { width: 100%; }
+            .ctrl-range::-webkit-slider-thumb { width: 24px; height: 24px; }
+            .ctrl-range::-moz-range-thumb { width: 24px; height: 24px; }
+            .ctrl-btn { width: 100%; text-align: center; min-height: 48px; font-size: 0.85rem; }
+            .ctrl-select { width: 100%; min-height: 48px; font-size: 1rem; }
+            .ctrl-input { width: 100%; min-height: 48px; font-size: 1rem; }
+            .tool-page-back { min-height: 48px; min-width: 48px; font-size: 0.85rem; padding: 0.6rem 1rem; }
+            .code-output { padding: 0.75rem; overflow-x: auto; }
+            .code-output pre { font-size: 0.7rem; }
+            .tool-visual { height: 140px; }
+            .tool-card:hover { transform: none; }
+            .tool-info { padding: 1rem; }
+            .tool-title { font-size: 1rem; }
+            .tool-desc { font-size: 0.85rem; }
+            input[type="color"] { width: 48px; height: 44px; }
+            .footer { padding: 2rem 1rem; }
+            .pal-swatch { width: 50px; }
+            .pal-swatch-color { width: 50px; height: 50px; }
+            .pal-swatch-label { font-size: 0.65rem; }
+            .px-pal-color { width: 36px; height: 36px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="scanline"></div>
+    <div class="noise"></div>
+    <nav>
+        <div class="nav-container">
+            <a href="onz-main.html" class="nav-logo">ONZ</a>
+            <button class="nav-toggle" id="navToggle" aria-label="菜单">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="onz-main.html#about">关于</a></li>
+                <li><a href="onz-main.html#projects">项目</a></li>
+                <li><a href="onz-main.html#contact">联系</a></li>
+            </ul>
+
+        </div>
+    </nav>
+
+    <header class="header">
+        <h1 class="header-title">
+            <span class="lc">T</span><span class="lp">O</span><span class="lo">O</span><span class="lc">L</span><span class="lg">K</span><span class="lp">I</span><span class="lo">T</span>
+        </h1>
+        <p class="header-subtitle">创意工具集合 · 点击打开工具</p>
+    </header>
+
+    <div class="tools-grid">
+        <div class="tool-card" onclick="openTool('flowfield')">
+            <div class="tool-visual"><canvas id="prevFlow" width="320" height="180"></canvas></div>
+            <div class="tool-info">
+                <h3 class="tool-title">流场生成器</h3>
+                <p class="tool-desc">基于 Perlin 噪声的粒子流场艺术，实时生成独一无二的视觉作品，可调参数导出图片。</p>
+                <div class="tool-tags"><span class="tool-tag">生成艺术</span><span class="tool-tag">粒子系统</span><span class="tool-tag">导出</span></div>
+            </div>
+        </div>
+        <div class="tool-card" onclick="openTool('pixelart')">
+            <div class="tool-visual"><canvas id="prevPixel" width="320" height="180"></canvas></div>
+            <div class="tool-info">
+                <h3 class="tool-title">像素画编辑器</h3>
+                <p class="tool-desc">在网格画布上逐像素绘制赛博朋克风格像素画，支持调色板、橡皮擦、导出PNG。</p>
+                <div class="tool-tags"><span class="tool-tag">像素画</span><span class="tool-tag">绘图</span><span class="tool-tag">导出</span></div>
+            </div>
+        </div>
+        <div class="tool-card" onclick="openTool('glitch')">
+            <div class="tool-visual"><canvas id="prevGlitch" width="320" height="180"></canvas></div>
+            <div class="tool-info">
+                <h3 class="tool-title">故障艺术工坊</h3>
+                <p class="tool-desc">输入文字实时生成赛博朋克故障艺术，可调 RGB 偏移、扫描线、噪点强度，导出图片。</p>
+                <div class="tool-tags"><span class="tool-tag">故障艺术</span><span class="tool-tag">文字效果</span><span class="tool-tag">导出</span></div>
+            </div>
+        </div>
+        <div class="tool-card" onclick="openTool('palette')">
+            <div class="tool-visual"><canvas id="prevPalette" width="320" height="180"></canvas></div>
+            <div class="tool-info">
+                <h3 class="tool-title">智能调色板</h3>
+                <p class="tool-desc">基于色彩理论自动生成和谐配色方案，支持互补色、三角色、类似色等模式，一键复制。</p>
+                <div class="tool-tags"><span class="tool-tag">配色</span><span class="tool-tag">设计</span><span class="tool-tag">CSS</span></div>
+            </div>
+        </div>
+        <div class="tool-card" onclick="openTool('fractal')">
+            <div class="tool-visual"><canvas id="prevFractal" width="320" height="180"></canvas></div>
+            <div class="tool-info">
+                <h3 class="tool-title">分形探索器</h3>
+                <p class="tool-desc">实时渲染 Mandelbrot 分形图案，鼠标滚轮缩放探索无限细节，可调迭代次数和配色。</p>
+                <div class="tool-tags"><span class="tool-tag">分形</span><span class="tool-tag">数学</span><span class="tool-tag">缩放</span></div>
+            </div>
+        </div>
+        <div class="tool-card" onclick="openTool('wave')">
+            <div class="tool-visual"><canvas id="prevWave" width="320" height="180"></canvas></div>
+            <div class="tool-info">
+                <h3 class="tool-title">波形合成器</h3>
+                <p class="tool-desc">叠加正弦波创造独特波形图案，调节频率、振幅、相位，实时预览动画效果，导出CSS代码。</p>
+                <div class="tool-tags"><span class="tool-tag">波形</span><span class="tool-tag">动画</span><span class="tool-tag">CSS</span></div>
+            </div>
+        </div>
+        <div class="tool-card" onclick="openTool('particle')">
+            <div class="tool-visual" style="background:linear-gradient(135deg,rgba(0,245,255,0.15),rgba(0,200,220,0.08))"><span style="font-size:4rem;filter:drop-shadow(0 0 20px rgba(0,245,255,0.6))">✨</span></div>
+            <div class="tool-info">
+                <h3 class="tool-title">粒子画布</h3>
+                <p class="tool-desc">用光粒绘制你的创意轨迹</p>
+                <div class="tool-tags"><span class="tool-tag">粒子</span><span class="tool-tag">绘画</span><span class="tool-tag">交互</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="tool-overlay">
+        <div class="tool-page" id="toolPage"></div>
+    </div>
+
+    <footer class="footer">
+        <p>© 2026 <span class="onz-footer">ONZ</span> | Creative Toolkit</p>
+    </footer>
+
+<script>
+function getThemeColors() {
+    var theme = document.documentElement.getAttribute('data-theme') || 'cyberpunk';
+    var colors = {
+        cyberpunk: { bg: '#050510', trail: 'rgba(10,10,15,0.05)', accent: '#00f5ff' },
+        aurora: { bg: '#f0f0f5', trail: 'rgba(240,240,245,0.05)', accent: '#00c9db' },
+        midnight: { bg: '#0a0515', trail: 'rgba(15,10,26,0.05)', accent: '#a855f7' }
+    };
+    return colors[theme] || colors.cyberpunk;
+}
+
+const toolOverlay = document.getElementById('tool-overlay');
+const toolPage = document.getElementById('toolPage');
+let currentToolRaf = null;
+let toolAnimActive = false;
+let previewRafIds = {};
+
+function openTool(name) {
+    stopPreviews();
+    if (currentToolRaf) { cancelAnimationFrame(currentToolRaf); currentToolRaf = null; }
+    toolAnimActive = true;
+    toolOverlay.style.display = 'block';
+    toolPage.style.display = 'block';
+    toolOverlay.scrollTop = 0;
+    if (name === 'flowfield') initFlowField();
+    else if (name === 'pixelart') initPixelArt();
+    else if (name === 'glitch') initGlitch();
+    else if (name === 'palette') initPalette();
+    else if (name === 'fractal') initFractal();
+    else if (name === 'wave') initWave();
+    else if (name === 'particle') initParticleCanvas();
+}
+
+function closeTool() {
+    toolAnimActive = false;
+    if (currentToolRaf) { cancelAnimationFrame(currentToolRaf); currentToolRaf = null; }
+    toolOverlay.style.display = 'none';
+    toolPage.style.display = 'none';
+    toolPage.innerHTML = '';
+    startPreviews();
+}
+
+function showToast(msg) {
+    const t = document.createElement('div');
+    t.textContent = msg;
+    t.style.cssText = 'position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:rgba(0,245,255,0.9);color:#0a0a0f;padding:0.6rem 1.5rem;border-radius:6px;font-family:"Space Grotesk",sans-serif;font-size:0.9rem;font-weight:600;z-index:10000;transition:opacity 0.3s;pointer-events:none';
+    document.body.appendChild(t);
+    setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 1500);
+}
+function copyText(text) {
+    navigator.clipboard.writeText(text).then(() => showToast('已复制!'));
+}
+
+function getCanvasDims(defaultW, defaultH) {
+    const maxW = window.innerWidth - 48;
+    if (defaultW <= maxW) return {w: defaultW, h: defaultH};
+    const ratio = defaultH / defaultW;
+    return {w: Math.floor(maxW), h: Math.floor(maxW * ratio)};
+}
+
+function stopPreviews() {
+    Object.keys(previewRafIds).forEach(k => {
+        if (previewRafIds[k]) { cancelAnimationFrame(previewRafIds[k]); previewRafIds[k] = null; }
+    });
+}
+
+function startPreviews() {
+    stopPreviews();
+
+    const fc = document.getElementById('prevFlow');
+    if (fc) {
+        const fx = fc.getContext('2d');
+        const ftc = getThemeColors();
+        fx.fillStyle = ftc.bg; fx.fillRect(0, 0, 320, 180);
+        let fparts = [];
+        for (let i = 0; i < 80; i++) fparts.push({x: Math.random()*320, y: Math.random()*180});
+        let ft = 0;
+        (function animFlow() {
+            const tc = getThemeColors();
+            fx.fillStyle = tc.trail; fx.fillRect(0, 0, 320, 180);
+            fparts.forEach(p => {
+                const angle = Math.sin(p.x*0.01+ft)*Math.cos(p.y*0.01+ft)*Math.PI*2;
+                p.x += Math.cos(angle)*1.5; p.y += Math.sin(angle)*1.5;
+                if (p.x < 0 || p.x > 320 || p.y < 0 || p.y > 180) { p.x = Math.random()*320; p.y = Math.random()*180; }
+                fx.fillStyle = `hsl(${(p.x+p.y+ft*50)%360}, 100%, 60%)`;
+                fx.fillRect(p.x, p.y, 1.5, 1.5);
+            });
+            ft += 0.005;
+            previewRafIds.flow = requestAnimationFrame(animFlow);
+        })();
+    }
+
+    const pc = document.getElementById('prevPixel');
+    if (pc) {
+        const px = pc.getContext('2d');
+        const pgrid = 10;
+        const cols = 32, rows = 18;
+        let pgrid_data = [];
+        for (let r = 0; r < rows; r++) {
+            pgrid_data[r] = [];
+            for (let c = 0; c < cols; c++) {
+                if (Math.random() > 0.7) {
+                    pgrid_data[r][c] = ['#00f5ff','#9d00ff','#ff4500','#00ff88'][Math.floor(Math.random()*4)];
+                } else {
+                    pgrid_data[r][c] = null;
+                }
+            }
+        }
+        let pt = 0;
+        (function animPixel() {
+            const tc = getThemeColors();
+            px.fillStyle = tc.bg; px.fillRect(0, 0, 320, 180);
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    if (pgrid_data[r][c]) {
+                        px.fillStyle = pgrid_data[r][c];
+                        px.fillRect(c*pgrid, r*pgrid, pgrid-1, pgrid-1);
+                    }
+                }
+            }
+            pt++;
+            if (pt % 8 === 0) {
+                const r = Math.floor(Math.random()*rows);
+                const c = Math.floor(Math.random()*cols);
+                if (Math.random() > 0.4) {
+                    pgrid_data[r][c] = ['#00f5ff','#9d00ff','#ff4500','#00ff88'][Math.floor(Math.random()*4)];
+                } else {
+                    pgrid_data[r][c] = null;
+                }
+            }
+            previewRafIds.pixel = requestAnimationFrame(animPixel);
+        })();
+    }
+
+    const gc = document.getElementById('prevGlitch');
+    if (gc) {
+        const gx = gc.getContext('2d');
+        let gt = 0;
+        (function animGlitch() {
+            const tc = getThemeColors();
+            gx.fillStyle = tc.bg; gx.fillRect(0, 0, 320, 180);
+            gx.font = '900 48px Orbitron'; gx.textAlign = 'center';
+            const ox = Math.sin(gt*3)*3, oy = Math.cos(gt*5)*2;
+            gx.fillStyle = 'rgba(255,69,0,0.7)'; gx.fillText('GLITCH', 160+ox, 95+oy);
+            gx.fillStyle = 'rgba(0,245,255,0.7)'; gx.fillText('GLITCH', 160-ox, 95-oy);
+            gx.fillStyle = '#ffffff'; gx.fillText('GLITCH', 160, 95);
+            if (Math.random() > 0.92) {
+                const sy = Math.random()*180, sh = 5+Math.random()*15;
+                try {
+                    const imgData = gx.getImageData(0, Math.max(0,Math.floor(sy)), 320, Math.min(sh, 180-Math.floor(sy)));
+                    gx.putImageData(imgData, (Math.random()-0.5)*20, Math.floor(sy));
+                } catch(e) {}
+            }
+            gt += 0.02;
+            previewRafIds.glitch = requestAnimationFrame(animGlitch);
+        })();
+    }
+
+    const lc = document.getElementById('prevPalette');
+    if (lc) {
+        const lx = lc.getContext('2d');
+        let lt = 0;
+        (function animPalette() {
+            const tc = getThemeColors();
+            lx.fillStyle = tc.bg; lx.fillRect(0, 0, 320, 180);
+            const baseHue = (lt * 20) % 360;
+            const hues = [baseHue, (baseHue+120)%360, (baseHue+240)%360, (baseHue+60)%360];
+            hues.forEach((h, i) => {
+                const grad = lx.createRadialGradient(80+i*60, 90, 5, 80+i*60, 90, 40);
+                grad.addColorStop(0, `hsl(${h}, 100%, 70%)`);
+                grad.addColorStop(1, `hsl(${h}, 90%, 45%)`);
+                lx.fillStyle = grad;
+                lx.beginPath(); lx.arc(80+i*60, 90, 40, 0, Math.PI*2); lx.fill();
+                lx.strokeStyle = `hsl(${h}, 80%, 60%)`; lx.lineWidth = 1;
+                lx.beginPath(); lx.arc(80+i*60, 90, 42, 0, Math.PI*2); lx.stroke();
+            });
+            lt += 0.005;
+            previewRafIds.palette = requestAnimationFrame(animPalette);
+        })();
+    }
+
+    const rc = document.getElementById('prevFractal');
+    if (rc) {
+        const rx = rc.getContext('2d');
+        const rimg = rx.createImageData(320, 180);
+        for (let py = 0; py < 180; py++) {
+            for (let ppx = 0; ppx < 320; ppx++) {
+                const x0 = (ppx - 220) / 100;
+                const y0 = (py - 90) / 100;
+                let x = 0, y = 0, iter = 0;
+                while (x*x + y*y <= 4 && iter < 30) {
+                    const xt = x*x - y*y + x0;
+                    y = 2*x*y + y0; x = xt; iter++;
+                }
+                const idx = (py*320+ppx)*4;
+                if (iter === 30) { rimg.data[idx]=5; rimg.data[idx+1]=5; rimg.data[idx+2]=16; }
+                else {
+                    const t = iter/30;
+                    rimg.data[idx] = Math.floor(t*255);
+                    rimg.data[idx+1] = Math.floor(t*100);
+                    rimg.data[idx+2] = Math.floor(255-t*100);
+                }
+                rimg.data[idx+3] = 255;
+            }
+        }
+        rx.putImageData(rimg, 0, 0);
+        let rt = 0;
+        (function animFractal() {
+            rx.putImageData(rimg, 0, 0);
+            const scanY = (rt * 2) % 180;
+            rx.fillStyle = 'rgba(0,245,255,0.08)';
+            rx.fillRect(0, scanY, 320, 3);
+            rx.fillStyle = 'rgba(157,0,255,0.05)';
+            rx.fillRect(0, (scanY + 90) % 180, 320, 2);
+            rt++;
+            previewRafIds.fractal = requestAnimationFrame(animFractal);
+        })();
+    }
+
+    const wc = document.getElementById('prevWave');
+    if (wc) {
+        const wx = wc.getContext('2d');
+        let wt = 0;
+        (function animWave() {
+            const tc = getThemeColors();
+            wx.fillStyle = tc.bg; wx.fillRect(0, 0, 320, 180);
+            wx.strokeStyle = '#00f5ff'; wx.lineWidth = 2; wx.beginPath();
+            for (let x = 0; x < 320; x++) {
+                const y = 90 + Math.sin(x*0.03+wt)*30 + Math.sin(x*0.07+wt*1.5)*15;
+                x === 0 ? wx.moveTo(x, y) : wx.lineTo(x, y);
+            }
+            wx.stroke();
+            wx.strokeStyle = '#9d00ff'; wx.lineWidth = 1.5; wx.beginPath();
+            for (let x = 0; x < 320; x++) {
+                const y = 90 + Math.sin(x*0.05+wt*0.8)*20 + Math.cos(x*0.02+wt*1.2)*25;
+                x === 0 ? wx.moveTo(x, y) : wx.lineTo(x, y);
+            }
+            wx.stroke();
+            wt += 0.03;
+            previewRafIds.wave = requestAnimationFrame(animWave);
+        })();
+    }
+}
+
+startPreviews();
+
+// ==================== 流场生成器 ====================
+function initFlowField() {
+    const dims = getCanvasDims(800, 500);
+    toolPage.innerHTML = `
+        <div class="tool-page-header">
+            <button class="tool-page-back" onclick="closeTool()">← 返回</button>
+            <h2 class="tool-page-title">流场生成器</h2>
+        </div>
+        <div class="tool-workspace">
+            <div class="tool-controls">
+                <div class="ctrl-group">
+                    <span class="ctrl-label">粒子数</span>
+                    <input type="range" class="ctrl-range" id="ffCount" min="100" max="2000" value="800">
+                </div>
+                <div class="ctrl-group">
+                    <span class="ctrl-label">噪声缩放</span>
+                    <input type="range" class="ctrl-range" id="ffScale" min="1" max="50" value="15">
+                </div>
+                <div class="ctrl-group">
+                    <span class="ctrl-label">速度</span>
+                    <input type="range" class="ctrl-range" id="ffSpeed" min="1" max="10" value="3">
+                </div>
+                <div class="ctrl-group">
+                    <span class="ctrl-label">配色</span>
+                    <select class="ctrl-select" id="ffColor">
+                        <option value="rainbow">彩虹</option>
+                        <option value="cyber">赛博朋克</option>
+                        <option value="fire">火焰</option>
+                        <option value="ocean">海洋</option>
+                    </select>
+                </div>
+                <button class="ctrl-btn" onclick="ffReset()">重置</button>
+                <button class="ctrl-btn ctrl-btn-primary" onclick="ffExport()">导出PNG</button>
+            </div>
+            <div class="tool-canvas-wrap"><canvas id="ffCanvas" width="${dims.w}" height="${dims.h}"></canvas></div>
+        </div>`;
+
+    const C = document.getElementById('ffCanvas');
+    const X = C.getContext('2d');
+    let particles = [];
+    let time = 0;
+
+    let perm = [];
+    function initPerm() {
+        const p = [];
+        for (let i = 0; i < 256; i++) p[i] = i;
+        for (let i = 255; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [p[i], p[j]] = [p[j], p[i]];
+        }
+        perm = [...p, ...p];
+    }
+    function fade(t) { return t * t * t * (t * (t * 6 - 15) + 10); }
+    function lerpN(a, b, t) { return a + t * (b - a); }
+    function grad2d(hash, x, y) {
+        const h = hash & 3;
+        const u = h < 2 ? x : y;
+        const v = h < 2 ? y : x;
+        return ((h & 1) ? -u : u) + ((h & 2) ? -v : v);
+    }
+    function perlin(x, y) {
+        const xi = Math.floor(x) & 255, yi = Math.floor(y) & 255;
+        const xf = x - Math.floor(x), yf = y - Math.floor(y);
+        const u = fade(xf), v = fade(yf);
+        const aa = perm[perm[xi] + yi], ab = perm[perm[xi] + yi + 1];
+        const ba = perm[perm[xi + 1] + yi], bb = perm[perm[xi + 1] + yi + 1];
+        return lerpN(
+            lerpN(grad2d(aa, xf, yf), grad2d(ba, xf - 1, yf), u),
+            lerpN(grad2d(ab, xf, yf - 1), grad2d(bb, xf - 1, yf - 1), u),
+            v
+        );
+    }
+
+    function getColor(x, y, t) {
+        const mode = document.getElementById('ffColor').value;
+        const hue = (x + y + t * 50) % 360;
+        if (mode === 'rainbow') return `hsl(${hue}, 100%, 60%)`;
+        if (mode === 'cyber') return `hsl(${180 + Math.sin(t+x*0.01)*40}, 100%, 60%)`;
+        if (mode === 'fire') return `hsl(${Math.min(60, hue*0.2)}, 100%, ${50+Math.sin(t)*20}%)`;
+        return `hsl(${200 + Math.sin(t+y*0.01)*30}, 80%, 55%)`;
+    }
+
+    window.ffReset = function() {
+        initPerm();
+        const count = parseInt(document.getElementById('ffCount').value);
+        particles = [];
+        X.fillStyle = getThemeColors().bg; X.fillRect(0, 0, C.width, C.height);
+        for (let i = 0; i < count; i++) {
+            particles.push({x: Math.random()*C.width, y: Math.random()*C.height});
+        }
+        time = 0;
+    }
+
+    function ffAnimate() {
+        if (!toolAnimActive) return;
+        const scale = parseInt(document.getElementById('ffScale').value) * 0.001;
+        const speed = parseInt(document.getElementById('ffSpeed').value);
+        const targetCount = parseInt(document.getElementById('ffCount').value);
+        while (particles.length < targetCount) particles.push({x: Math.random()*C.width, y: Math.random()*C.height});
+        if (particles.length > targetCount) particles.length = targetCount;
+        X.fillStyle = getThemeColors().trail;
+        X.fillRect(0, 0, C.width, C.height);
+
+        particles.forEach(p => {
+            const angle = perlin(p.x * scale, p.y * scale + time) * Math.PI * 4;
+            p.x += Math.cos(angle) * speed;
+            p.y += Math.sin(angle) * speed;
+            if (p.x < 0 || p.x > C.width || p.y < 0 || p.y > C.height) {
+                p.x = Math.random() * C.width;
+                p.y = Math.random() * C.height;
+            }
+            X.fillStyle = getColor(p.x, p.y, time);
+            X.fillRect(p.x, p.y, 1.5, 1.5);
+        });
+        time += 0.003;
+        currentToolRaf = requestAnimationFrame(ffAnimate);
+    }
+
+    window.ffExport = function() {
+        const link = document.createElement('a');
+        link.download = 'flowfield.png';
+        link.href = C.toDataURL();
+        link.click();
+    }
+
+    ffReset();
+    ffAnimate();
+}
+
+// ==================== 像素画编辑器 ====================
+function initPixelArt() {
+    const GRID = 32;
+    const availW = Math.min(window.innerWidth - 48, 512);
+    const CELL = Math.max(12, Math.floor(availW / GRID));
+    toolPage.innerHTML = `
+        <div class="tool-page-header">
+            <button class="tool-page-back" onclick="closeTool()">← 返回</button>
+            <h2 class="tool-page-title">像素画编辑器</h2>
+        </div>
+        <div class="tool-workspace">
+            <div class="tool-controls">
+                <div class="ctrl-group">
+                    <span class="ctrl-label">画笔颜色</span>
+                    <input type="color" id="pxColor" value="#00f5ff">
+                </div>
+                <div class="ctrl-group">
+                    <span class="ctrl-label">工具</span>
+                    <select class="ctrl-select" id="pxTool">
+                        <option value="pen">画笔</option>
+                        <option value="eraser">橡皮擦</option>
+                        <option value="fill">填充</option>
+                    </select>
+                </div>
+                <button class="ctrl-btn" onclick="pxClear()">清空</button>
+                <button class="ctrl-btn ctrl-btn-primary" onclick="pxExport()">导出PNG</button>
+            </div>
+            <div class="tool-canvas-wrap"><canvas id="pxCanvas" width="${GRID*CELL}" height="${GRID*CELL}" style="cursor:crosshair"></canvas></div>
+            <div class="tool-controls" style="border-bottom:none;margin-bottom:0;padding-bottom:0">
+                <span class="ctrl-label">快捷色板</span>
+                <div style="display:flex;gap:6px;flex-wrap:wrap" id="pxPalette"></div>
+            </div>
+        </div>`;
+
+    const C = document.getElementById('pxCanvas');
+    const X = C.getContext('2d');
+    let grid = Array.from({length: GRID}, () => Array(GRID).fill(null));
+    let drawing = false;
+
+    const palette = ['#00f5ff','#9d00ff','#ff4500','#00ff88','#ffff00','#ff00ff','#ffffff','#c0c0c0',
+        '#ff6666','#66ff66','#6666ff','#ffaa00','#00aaff','#ff00aa','#333333','#0a0a0f'];
+    const palDiv = document.getElementById('pxPalette');
+    palette.forEach(c => {
+        const s = document.createElement('div');
+        s.className = 'px-pal-color';
+        s.style.background = c;
+        s.onclick = () => document.getElementById('pxColor').value = c;
+        palDiv.appendChild(s);
+    });
+
+    function drawGrid() {
+        X.fillStyle = getThemeColors().bg; X.fillRect(0, 0, C.width, C.height);
+        for (let r = 0; r < GRID; r++) {
+            for (let c = 0; c < GRID; c++) {
+                if (grid[r][c]) {
+                    X.fillStyle = grid[r][c];
+                    X.fillRect(c*CELL, r*CELL, CELL, CELL);
+                }
+                X.strokeStyle = 'rgba(255,255,255,0.05)'; X.lineWidth = 0.5;
+                X.strokeRect(c*CELL, r*CELL, CELL, CELL);
+            }
+        }
+    }
+
+    function getCell(e) {
+        const rect = C.getBoundingClientRect();
+        const scaleX = C.width / rect.width;
+        const scaleY = C.height / rect.height;
+        const x = (e.clientX - rect.left) * scaleX;
+        const y = (e.clientY - rect.top) * scaleY;
+        return {c: Math.floor(x/CELL), r: Math.floor(y/CELL)};
+    }
+
+    function paint(e, isClick) {
+        const {r, c} = getCell(e);
+        if (r < 0 || r >= GRID || c < 0 || c >= GRID) return;
+        const tool = document.getElementById('pxTool').value;
+        if (tool === 'pen') grid[r][c] = document.getElementById('pxColor').value;
+        else if (tool === 'eraser') grid[r][c] = null;
+        else if (tool === 'fill' && isClick) floodFill(r, c, grid[r][c], document.getElementById('pxColor').value);
+        drawGrid();
+    }
+
+    function floodFill(r, c, target, fill) {
+        if (target === fill) return;
+        const stack = [[r, c]];
+        const visited = new Set();
+        while (stack.length) {
+            const [cr, cc] = stack.pop();
+            const key = cr + ',' + cc;
+            if (visited.has(key) || cr < 0 || cr >= GRID || cc < 0 || cc >= GRID) continue;
+            if (grid[cr][cc] !== target) continue;
+            visited.add(key);
+            grid[cr][cc] = fill;
+            stack.push([cr-1,cc],[cr+1,cc],[cr,cc-1],[cr,cc+1]);
+        }
+    }
+
+    C.onmousedown = e => { drawing = true; paint(e, true); };
+    C.onmousemove = e => { if (drawing) paint(e, false); };
+    C.onmouseup = () => drawing = false;
+    C.onmouseleave = () => drawing = false;
+
+    C.ontouchstart = e => { e.preventDefault(); drawing = true; paint(e.touches[0], true); };
+    C.ontouchmove = e => { e.preventDefault(); if (drawing) paint(e.touches[0], false); };
+    C.ontouchend = () => drawing = false;
+
+    window.pxClear = function() { grid = Array.from({length: GRID}, () => Array(GRID).fill(null)); drawGrid(); }
+    window.pxExport = function() {
+        const ec = document.createElement('canvas');
+        ec.width = GRID; ec.height = GRID;
+        const ex = ec.getContext('2d');
+        for (let r = 0; r < GRID; r++)
+            for (let c = 0; c < GRID; c++)
+                if (grid[r][c]) { ex.fillStyle = grid[r][c]; ex.fillRect(c, r, 1, 1); }
+        const link = document.createElement('a');
+        link.download = 'pixelart.png'; link.href = ec.toDataURL(); link.click();
+    }
+
+    drawGrid();
+}
+
+// ==================== 故障艺术工坊 ====================
+function initGlitch() {
+    const dims = getCanvasDims(800, 400);
+    toolPage.innerHTML = `
+        <div class="tool-page-header">
+            <button class="tool-page-back" onclick="closeTool()">← 返回</button>
+            <h2 class="tool-page-title">故障艺术工坊</h2>
+        </div>
+        <div class="tool-workspace">
+            <div class="tool-controls">
+                <div class="ctrl-group">
+                    <span class="ctrl-label">文字</span>
+                    <input type="text" class="ctrl-input" id="glText" value="ONZ" maxlength="8" style="width:100px">
+                </div>
+                <div class="ctrl-group">
+                    <span class="ctrl-label">RGB偏移</span>
+                    <input type="range" class="ctrl-range" id="glOffset" min="0" max="20" value="5">
+                </div>
+                <div class="ctrl-group">
+                    <span class="ctrl-label">扫描线</span>
+                    <input type="range" class="ctrl-range" id="glScan" min="0" max="10" value="3">
+                </div>
+                <div class="ctrl-group">
+                    <span class="ctrl-label">噪点</span>
+                    <input type="range" class="ctrl-range" id="glNoise" min="0" max="50" value="10">
+                </div>
+                <button class="ctrl-btn ctrl-btn-primary" onclick="glExport()">导出PNG</button>
+            </div>
+            <div class="tool-canvas-wrap"><canvas id="glCanvas" width="${dims.w}" height="${dims.h}"></canvas></div>
+        </div>`;
+
+    const C = document.getElementById('glCanvas');
+    const X = C.getContext('2d');
+    let t = 0;
+
+    function drawGlitch() {
+        if (!toolAnimActive) return;
+        const text = document.getElementById('glText').value || 'ONZ';
+        const offset = parseInt(document.getElementById('glOffset').value);
+        const scan = parseInt(document.getElementById('glScan').value);
+        const noise = parseInt(document.getElementById('glNoise').value);
+
+        X.fillStyle = getThemeColors().bg; X.fillRect(0, 0, C.width, C.height);
+        X.font = '900 ' + Math.floor(C.width * 0.15) + 'px Orbitron'; X.textAlign = 'center'; X.textBaseline = 'middle';
+
+        const gcx = C.width / 2, gcy = C.height / 2;
+        const ox = Math.sin(t*3)*offset, oy = Math.cos(t*5)*offset*0.5;
+        X.fillStyle = 'rgba(255,69,0,0.6)'; X.fillText(text, gcx+ox, gcy+oy);
+        X.fillStyle = 'rgba(0,245,255,0.6)'; X.fillText(text, gcx-ox, gcy-oy);
+        X.fillStyle = 'rgba(157,0,255,0.4)'; X.fillText(text, gcx+oy, gcy-ox);
+        X.fillStyle = '#ffffff'; X.fillText(text, gcx, gcy);
+
+        if (Math.random() > 0.9) {
+            const sy = Math.random()*C.height, sh = 5+Math.random()*20;
+            try {
+                const imgData = X.getImageData(0, Math.max(0,Math.floor(sy)), C.width, Math.min(sh, C.height-Math.floor(sy)));
+                X.putImageData(imgData, (Math.random()-0.5)*offset*4, Math.floor(sy));
+            } catch(e) {}
+        }
+
+        if (scan > 0) {
+            for (let y = 0; y < C.height; y += scan * 2) {
+                X.fillStyle = 'rgba(0,0,0,0.15)';
+                X.fillRect(0, y, C.width, scan);
+            }
+        }
+
+        if (noise > 0) {
+            const imgData = X.getImageData(0, 0, C.width, C.height);
+            for (let i = 0; i < noise * 100; i++) {
+                const idx = Math.floor(Math.random() * imgData.data.length / 4) * 4;
+                if (Math.random() > 0.5) {
+                    imgData.data[idx] = Math.min(255, imgData.data[idx] + Math.random()*100);
+                    imgData.data[idx+1] = Math.min(255, imgData.data[idx+1] + Math.random()*100);
+                    imgData.data[idx+2] = Math.min(255, imgData.data[idx+2] + Math.random()*100);
+                }
+            }
+            X.putImageData(imgData, 0, 0);
+        }
+
+        t += 0.02;
+        currentToolRaf = requestAnimationFrame(drawGlitch);
+    }
+
+    window.glExport = function() {
+        const link = document.createElement('a');
+        link.download = 'glitch-art.png'; link.href = C.toDataURL(); link.click();
+    }
+
+    drawGlitch();
+}
+
+// ==================== 智能调色板 ====================
+function initPalette() {
+    toolPage.innerHTML = `
+        <div class="tool-page-header">
+            <button class="tool-page-back" onclick="closeTool()">← 返回</button>
+            <h2 class="tool-page-title">智能调色板</h2>
+        </div>
+        <div class="tool-workspace">
+            <div class="tool-controls">
+                <div class="ctrl-group">
+                    <span class="ctrl-label">基础色</span>
+                    <input type="color" id="palBase" value="#00f5ff">
+                </div>
+                <div class="ctrl-group">
+                    <span class="ctrl-label">和谐模式</span>
+                    <select class="ctrl-select" id="palMode">
+                        <option value="complementary">互补色</option>
+                        <option value="triadic">三角色</option>
+                        <option value="analogous">类似色</option>
+                        <option value="split">分裂互补</option>
+                        <option value="tetradic">四角色</option>
+                    </select>
+                </div>
+                <button class="ctrl-btn ctrl-btn-primary" onclick="palGenerate()">生成配色</button>
+            </div>
+            <div id="palResult" style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-bottom:1.5rem"></div>
+            <div class="code-output">
+                <button class="ctrl-btn code-copy" onclick="copyText(document.getElementById('palCSS').textContent)">复制</button>
+                <pre id="palCSS"></pre>
+            </div>
+        </div>`;
+
+    function hexToHsl(hex) {
+        let r = parseInt(hex.slice(1,3),16)/255;
+        let g = parseInt(hex.slice(3,5),16)/255;
+        let b = parseInt(hex.slice(5,7),16)/255;
+        const max = Math.max(r,g,b), min = Math.min(r,g,b);
+        let h, s, l = (max+min)/2;
+        if (max === min) { h = s = 0; }
+        else {
+            const d = max - min;
+            s = l > 0.5 ? d/(2-max-min) : d/(max+min);
+            if (max === r) h = ((g-b)/d + (g<b?6:0))/6;
+            else if (max === g) h = ((b-r)/d+2)/6;
+            else h = ((r-g)/d+4)/6;
+        }
+        return [h*360, s*100, l*100];
+    }
+
+    function hslToHex(h, s, l) {
+        h /= 360; s /= 100; l /= 100;
+        let r, g, b;
+        if (s === 0) { r = g = b = l; }
+        else {
+            const hue2rgb = (p, q, t) => {
+                if (t < 0) t += 1; if (t > 1) t -= 1;
+                if (t < 1/6) return p + (q-p)*6*t;
+                if (t < 1/2) return q;
+                if (t < 2/3) return p + (q-p)*(2/3-t)*6;
+                return p;
+            };
+            const q = l < 0.5 ? l*(1+s) : l+s-l*s;
+            const p = 2*l - q;
+            r = hue2rgb(p, q, h+1/3);
+            g = hue2rgb(p, q, h);
+            b = hue2rgb(p, q, h-1/3);
+        }
+        const toHex = v => { const hex = Math.round(v*255).toString(16); return hex.length===1 ? '0'+hex : hex; };
+        return '#' + toHex(r) + toHex(g) + toHex(b);
+    }
+
+    window.palGenerate = function() {
+        const base = document.getElementById('palBase').value;
+        const [h, s, l] = hexToHsl(base);
+        const mode = document.getElementById('palMode').value;
+        let hues = [];
+        if (mode === 'complementary') hues = [h, (h+180)%360];
+        else if (mode === 'triadic') hues = [h, (h+120)%360, (h+240)%360];
+        else if (mode === 'analogous') hues = [h, (h+30)%360, (h+60)%360, (h-30+360)%360];
+        else if (mode === 'split') hues = [h, (h+150)%360, (h+210)%360];
+        else if (mode === 'tetradic') hues = [h, (h+90)%360, (h+180)%360, (h+270)%360];
+
+        const colors = [];
+        hues.forEach(hue => {
+            colors.push(hslToHex(hue, s, l));
+            colors.push(hslToHex(hue, s, Math.min(l+20, 85)));
+            colors.push(hslToHex(hue, Math.max(s-20, 30), Math.max(l-20, 20)));
+        });
+
+        const result = document.getElementById('palResult');
+        result.innerHTML = '';
+        colors.forEach(c => {
+            const div = document.createElement('div');
+            div.className = 'pal-swatch';
+            div.innerHTML = `
+                <div class="pal-swatch-color" style="background:${c}"></div>
+                <div class="pal-swatch-label">${c}</div>`;
+            div.onclick = () => copyText(c);
+            result.appendChild(div);
+        });
+
+        const cssVars = hues.map((hue, i) => `  --color-${i+1}: ${hslToHex(hue, s, l)};\n  --color-${i+1}-light: ${hslToHex(hue, s, Math.min(l+20, 85))};\n  --color-${i+1}-dark: ${hslToHex(hue, Math.max(s-20, 30), Math.max(l-20, 20))};`).join('\n');
+        document.getElementById('palCSS').textContent = `:root {\n${cssVars}\n}`;
+    };
+
+    palGenerate();
+}
+
+// ==================== 分形探索器 ====================
+function initFractal() {
+    const dims = getCanvasDims(700, 500);
+    toolPage.innerHTML = `
+        <div class="tool-page-header">
+            <button class="tool-page-back" onclick="closeTool()">← 返回</button>
+            <h2 class="tool-page-title">分形探索器</h2>
+        </div>
+        <div class="tool-workspace">
+            <div class="tool-controls">
+                <div class="ctrl-group">
+                    <span class="ctrl-label">迭代次数</span>
+                    <input type="range" class="ctrl-range" id="frIter" min="20" max="200" value="60">
+                </div>
+                <div class="ctrl-group">
+                    <span class="ctrl-label">配色</span>
+                    <select class="ctrl-select" id="frColor">
+                        <option value="electric">电光</option>
+                        <option value="fire">火焰</option>
+                        <option value="ice">冰霜</option>
+                        <option value="neon">霓虹</option>
+                    </select>
+                </div>
+                <button class="ctrl-btn" onclick="frReset()">重置视图</button>
+                <button class="ctrl-btn ctrl-btn-primary" onclick="frExport()">导出PNG</button>
+            </div>
+            <div class="tool-canvas-wrap"><canvas id="frCanvas" width="${dims.w}" height="${dims.h}" style="cursor:zoom-in;touch-action:none"></canvas></div>
+            <p style="text-align:center;font-size:0.8rem;color:#c0c0c0;margin-top:0.5rem">滚轮缩放 · 拖拽平移 · 触屏双指缩放</p>
+        </div>`;
+
+    const C = document.getElementById('frCanvas');
+    const X = C.getContext('2d');
+    let cx = -0.5, cy = 0, zoom = 1.5;
+    let dragging = false, dragStart = null, cxStart, cyStart;
+
+    function renderFractal() {
+        const maxIter = parseInt(document.getElementById('frIter').value);
+        const colorMode = document.getElementById('frColor').value;
+        const img = X.createImageData(C.width, C.height);
+        const aspect = C.width / C.height;
+        for (let py = 0; py < C.height; py++) {
+            for (let ppx = 0; ppx < C.width; ppx++) {
+                const x0 = cx + (ppx / C.width - 0.5) * 4 * zoom * aspect;
+                const y0 = cy + (py / C.height - 0.5) * 4 * zoom;
+                let x = 0, y = 0, iter = 0;
+                while (x*x + y*y <= 4 && iter < maxIter) {
+                    const xt = x*x - y*y + x0;
+                    y = 2*x*y + y0; x = xt; iter++;
+                }
+                const idx = (py*C.width+ppx)*4;
+                if (iter === maxIter) {
+                    img.data[idx]=5; img.data[idx+1]=5; img.data[idx+2]=16;
+                } else {
+                    const log_zn = Math.log(x*x + y*y) / 2;
+                    const nu = Math.log(Math.max(1, log_zn / Math.log(2))) / Math.log(2);
+                    const smoothIter = iter + 1 - nu;
+                    const t = Math.max(0, smoothIter) / maxIter;
+                    let r, g, b;
+                    if (colorMode === 'electric') {
+                        r = Math.floor(t*3*255); g = Math.floor(t*1.5*100); b = Math.floor(255-t*200);
+                    } else if (colorMode === 'fire') {
+                        r = Math.floor(Math.min(255, t*4*255)); g = Math.floor(t*2*100); b = Math.floor(t*50);
+                    } else if (colorMode === 'ice') {
+                        r = Math.floor(t*80); g = Math.floor(t*2*200); b = Math.floor(Math.min(255, t*3*255));
+                    } else {
+                        r = Math.floor(Math.sin(t*6.28)*127+128);
+                        g = Math.floor(Math.sin(t*6.28+2)*127+128);
+                        b = Math.floor(Math.sin(t*6.28+4)*127+128);
+                    }
+                    img.data[idx] = Math.min(255, Math.max(0, r));
+                    img.data[idx+1] = Math.min(255, Math.max(0, g));
+                    img.data[idx+2] = Math.min(255, Math.max(0, b));
+                }
+                img.data[idx+3] = 255;
+            }
+        }
+        X.putImageData(img, 0, 0);
+    }
+
+    C.onwheel = e => {
+        e.preventDefault();
+        const rect = C.getBoundingClientRect();
+        const mx = (e.clientX - rect.left) / rect.width;
+        const my = (e.clientY - rect.top) / rect.height;
+        const aspect = C.width / C.height;
+        const factor = e.deltaY > 0 ? 1.2 : 0.8;
+        const wx = cx + (mx - 0.5) * 4 * zoom * aspect;
+        const wy = cy + (my - 0.5) * 4 * zoom;
+        zoom *= factor;
+        cx = wx - (mx - 0.5) * 4 * zoom * aspect;
+        cy = wy - (my - 0.5) * 4 * zoom;
+        renderFractal();
+    };
+
+    C.onmousedown = e => {
+        if (e.button === 0) { dragging = true; dragStart = {x: e.clientX, y: e.clientY}; cxStart = cx; cyStart = cy; }
+    };
+    C.onmousemove = e => {
+        if (!dragging) return;
+        const rect = C.getBoundingClientRect();
+        const aspect = C.width / C.height;
+        const dx = (e.clientX - dragStart.x) / rect.width * 4 * zoom * aspect;
+        const dy = (e.clientY - dragStart.y) / rect.height * 4 * zoom;
+        cx = cxStart - dx; cy = cyStart - dy;
+        renderFractal();
+    };
+    C.onmouseup = () => dragging = false;
+    C.onmouseleave = () => dragging = false;
+
+    let frTouches = {};
+    let pinchDist = null;
+    C.ontouchstart = e => {
+        e.preventDefault();
+        if (e.touches.length === 1) {
+            dragging = true;
+            dragStart = {x: e.touches[0].clientX, y: e.touches[0].clientY};
+            cxStart = cx; cyStart = cy;
+        }
+        if (e.touches.length === 2) {
+            dragging = false;
+            pinchDist = Math.hypot(
+                e.touches[0].clientX - e.touches[1].clientX,
+                e.touches[0].clientY - e.touches[1].clientY
+            );
+        }
+    };
+    C.ontouchmove = e => {
+        e.preventDefault();
+        if (e.touches.length === 1 && dragging) {
+            const rect = C.getBoundingClientRect();
+            const aspect = C.width / C.height;
+            const dx = (e.touches[0].clientX - dragStart.x) / rect.width * 4 * zoom * aspect;
+            const dy = (e.touches[0].clientY - dragStart.y) / rect.height * 4 * zoom;
+            cx = cxStart - dx; cy = cyStart - dy;
+            renderFractal();
+        } else if (e.touches.length === 2 && pinchDist !== null) {
+            const newDist = Math.hypot(
+                e.touches[0].clientX - e.touches[1].clientX,
+                e.touches[0].clientY - e.touches[1].clientY
+            );
+            const factor = pinchDist / newDist;
+            zoom *= factor;
+            pinchDist = newDist;
+            renderFractal();
+        }
+    };
+    C.ontouchend = e => {
+        dragging = false;
+        if (e.touches.length < 2) pinchDist = null;
+    };
+
+    window.frReset = function() { cx = -0.5; cy = 0; zoom = 1.5; renderFractal(); }
+    window.frExport = function() {
+        const link = document.createElement('a');
+        link.download = 'fractal.png'; link.href = C.toDataURL(); link.click();
+    }
+
+    document.getElementById('frIter').oninput = renderFractal;
+    document.getElementById('frColor').onchange = renderFractal;
+    renderFractal();
+}
+
+// ==================== 波形合成器 ====================
+function initWave() {
+    const dims = getCanvasDims(800, 400);
+    toolPage.innerHTML = `
+        <div class="tool-page-header">
+            <button class="tool-page-back" onclick="closeTool()">← 返回</button>
+            <h2 class="tool-page-title">波形合成器</h2>
+        </div>
+        <div class="tool-workspace">
+            <div class="tool-controls">
+                <div class="ctrl-group">
+                    <span class="ctrl-label">波1 频率</span>
+                    <input type="range" class="ctrl-range" id="wvF1" min="1" max="20" value="3">
+                </div>
+                <div class="ctrl-group">
+                    <span class="ctrl-label">波1 振幅</span>
+                    <input type="range" class="ctrl-range" id="wvA1" min="5" max="100" value="40">
+                </div>
+                <div class="ctrl-group">
+                    <span class="ctrl-label">波2 频率</span>
+                    <input type="range" class="ctrl-range" id="wvF2" min="1" max="20" value="7">
+                </div>
+                <div class="ctrl-group">
+                    <span class="ctrl-label">波2 振幅</span>
+                    <input type="range" class="ctrl-range" id="wvA2" min="5" max="100" value="20">
+                </div>
+                <div class="ctrl-group">
+                    <span class="ctrl-label">波3 频率</span>
+                    <input type="range" class="ctrl-range" id="wvF3" min="1" max="20" value="12">
+                </div>
+                <div class="ctrl-group">
+                    <span class="ctrl-label">波3 振幅</span>
+                    <input type="range" class="ctrl-range" id="wvA3" min="0" max="100" value="10">
+                </div>
+            </div>
+            <div class="tool-canvas-wrap"><canvas id="wvCanvas" width="${dims.w}" height="${dims.h}"></canvas></div>
+            <div class="tool-controls" style="border-bottom:none;margin-bottom:0;padding-bottom:0">
+                <button class="ctrl-btn" onclick="wvPause()">暂停/播放</button>
+                <button class="ctrl-btn ctrl-btn-primary" onclick="wvCopyCSS()">复制CSS代码</button>
+            </div>
+            <div class="code-output">
+                <button class="ctrl-btn code-copy" onclick="copyText(document.getElementById('wvCSS').textContent)">复制</button>
+                <pre id="wvCSS"></pre>
+            </div>
+        </div>`;
+
+    const C = document.getElementById('wvCanvas');
+    const X = C.getContext('2d');
+    let t = 0;
+    let paused = false;
+
+    function drawWave() {
+        if (!toolAnimActive) return;
+        const f1 = parseInt(document.getElementById('wvF1').value);
+        const a1 = parseInt(document.getElementById('wvA1').value);
+        const f2 = parseInt(document.getElementById('wvF2').value);
+        const a2 = parseInt(document.getElementById('wvA2').value);
+        const f3 = parseInt(document.getElementById('wvF3').value);
+        const a3 = parseInt(document.getElementById('wvA3').value);
+
+        X.fillStyle = getThemeColors().bg; X.fillRect(0, 0, C.width, C.height);
+
+        X.strokeStyle = 'rgba(0,245,255,0.15)'; X.lineWidth = 1;
+        X.beginPath(); X.moveTo(0, C.height/2); X.lineTo(C.width, C.height/2); X.stroke();
+
+        const waves = [
+            {f: f1, a: a1, color: '#00f5ff', width: 2.5},
+            {f: f2, a: a2, color: '#9d00ff', width: 2},
+            {f: f3, a: a3, color: '#ff4500', width: 1.5},
+        ];
+
+        let combinedPoints = [];
+
+        waves.forEach((w, wi) => {
+            X.strokeStyle = w.color; X.lineWidth = w.width;
+            X.shadowColor = w.color; X.shadowBlur = 8;
+            X.beginPath();
+            for (let x = 0; x < C.width; x++) {
+                const y = C.height/2 + Math.sin(x * w.f * 0.01 + t) * w.a;
+                x === 0 ? X.moveTo(x, y) : X.lineTo(x, y);
+                if (wi === 0) combinedPoints.push(y);
+                else combinedPoints[x] += y - C.height/2;
+            }
+            X.stroke(); X.shadowBlur = 0;
+        });
+
+        X.strokeStyle = '#00ff88'; X.lineWidth = 2;
+        X.shadowColor = '#00ff88'; X.shadowBlur = 10;
+        X.beginPath();
+        combinedPoints.forEach((y, x) => {
+            x === 0 ? X.moveTo(x, y) : X.lineTo(x, y);
+        });
+        X.stroke(); X.shadowBlur = 0;
+
+        if (!paused) t += 0.03;
+
+        const cssKeyframes = [];
+        for (let i = 0; i <= 100; i += 10) {
+            const phase = i / 100 * Math.PI * 2;
+            const y = Math.sin(phase) * a1 * 0.3
+                    + Math.sin(phase * f2 / f1) * a2 * 0.3
+                    + Math.sin(phase * f3 / f1) * a3 * 0.3;
+            cssKeyframes.push(`  ${i}% { transform: translateY(${y.toFixed(1)}px) }`);
+        }
+        document.getElementById('wvCSS').textContent =
+`@keyframes wave {\n${cssKeyframes.join('\n')}\n}\n\n.wave-element {\n  animation: wave 2s ease-in-out infinite;\n}`;
+
+        currentToolRaf = requestAnimationFrame(drawWave);
+    }
+
+    window.wvPause = function() { paused = !paused; }
+    window.wvCopyCSS = function() { copyText(document.getElementById('wvCSS').textContent); }
+
+    drawWave();
+}
+
+// ==================== 粒子画布 ====================
+function initParticleCanvas() {
+    const dims = getCanvasDims(800, 500);
+    toolPage.innerHTML = `
+        <div class="tool-page-header">
+            <button class="tool-page-back" onclick="closeTool()">← 返回</button>
+            <h2 class="tool-page-title">粒子画布</h2>
+        </div>
+        <div class="tool-workspace">
+            <div class="tool-controls">
+                <div class="ctrl-group">
+                    <span class="ctrl-label">粒子颜色</span>
+                    <input type="color" id="pcColor" value="#00f5ff">
+                </div>
+                <div class="ctrl-group">
+                    <span class="ctrl-label">粒子大小</span>
+                    <input type="range" class="ctrl-range" id="pcSize" min="1" max="10" value="4">
+                </div>
+                <div class="ctrl-group">
+                    <span class="ctrl-label">扩散范围</span>
+                    <input type="range" class="ctrl-range" id="pcSpread" min="0" max="5" value="1" step="0.5">
+                </div>
+                <div class="ctrl-group">
+                    <span class="ctrl-label">衰减速度</span>
+                    <input type="range" class="ctrl-range" id="pcFade" min="1" max="10" value="5">
+                </div>
+                <div class="ctrl-group">
+                    <span class="ctrl-label">发光强度</span>
+                    <input type="range" class="ctrl-range" id="pcGlow" min="0" max="30" value="15">
+                </div>
+                <div class="ctrl-group">
+                    <span class="ctrl-label">拖尾效果</span>
+                    <input type="checkbox" id="pcTrail" style="width:20px;height:20px;accent-color:var(--onz-cyan);cursor:pointer">
+                </div>
+            </div>
+            <div class="tool-canvas-wrap"><canvas id="pcCanvas" width="${dims.w}" height="${dims.h}" style="cursor:crosshair;touch-action:none"></canvas></div>
+            <div class="tool-controls" style="border-bottom:none;margin-bottom:0;padding-bottom:0">
+                <button class="ctrl-btn" onclick="pcClear()">清除画布</button>
+                <button class="ctrl-btn ctrl-btn-primary" onclick="pcExport()">导出PNG</button>
+            </div>
+        </div>`;
+
+    const C = document.getElementById('pcCanvas');
+    const X = C.getContext('2d');
+    let particles = [];
+    let drawing = false;
+    let mouseX = 0, mouseY = 0;
+
+    X.fillStyle = getThemeColors().bg;
+    X.fillRect(0, 0, C.width, C.height);
+
+    function spawnParticles(x, y) {
+        const color = document.getElementById('pcColor').value;
+        const size = parseFloat(document.getElementById('pcSize').value);
+        const spread = parseFloat(document.getElementById('pcSpread').value);
+        const glow = parseInt(document.getElementById('pcGlow').value);
+        for (let i = 0; i < 5; i++) {
+            particles.push({
+                x: x,
+                y: y,
+                vx: (Math.random() - 0.5) * spread * 2,
+                vy: (Math.random() - 0.5) * spread * 2,
+                size: size * (0.5 + Math.random() * 0.5),
+                color: color,
+                life: 1,
+                maxLife: 1,
+                glow: glow
+            });
+        }
+    }
+
+    function getCanvasPos(e) {
+        const rect = C.getBoundingClientRect();
+        const scaleX = C.width / rect.width;
+        const scaleY = C.height / rect.height;
+        return {
+            x: (e.clientX - rect.left) * scaleX,
+            y: (e.clientY - rect.top) * scaleY
+        };
+    }
+
+    C.onmousedown = e => {
+        drawing = true;
+        const pos = getCanvasPos(e);
+        mouseX = pos.x; mouseY = pos.y;
+        spawnParticles(pos.x, pos.y);
+    };
+    C.onmousemove = e => {
+        if (!drawing) return;
+        const pos = getCanvasPos(e);
+        mouseX = pos.x; mouseY = pos.y;
+        spawnParticles(pos.x, pos.y);
+    };
+    C.onmouseup = () => drawing = false;
+    C.onmouseleave = () => drawing = false;
+
+    C.ontouchstart = e => {
+        e.preventDefault();
+        drawing = true;
+        const pos = getCanvasPos(e.touches[0]);
+        mouseX = pos.x; mouseY = pos.y;
+        spawnParticles(pos.x, pos.y);
+    };
+    C.ontouchmove = e => {
+        e.preventDefault();
+        if (!drawing) return;
+        const pos = getCanvasPos(e.touches[0]);
+        mouseX = pos.x; mouseY = pos.y;
+        spawnParticles(pos.x, pos.y);
+    };
+    C.ontouchend = () => drawing = false;
+
+    function pcAnimate() {
+        if (!toolAnimActive) return;
+
+        const trail = document.getElementById('pcTrail').checked;
+        const fadeSpeed = parseInt(document.getElementById('pcFade').value);
+
+        if (trail) {
+            X.fillStyle = getThemeColors().trail;
+            X.fillRect(0, 0, C.width, C.height);
+        } else {
+            X.fillStyle = getThemeColors().bg;
+            X.fillRect(0, 0, C.width, C.height);
+        }
+
+        for (let i = particles.length - 1; i >= 0; i--) {
+            const p = particles[i];
+            p.x += p.vx;
+            p.y += p.vy;
+            p.life -= fadeSpeed * 0.008;
+            if (p.life <= 0) {
+                particles.splice(i, 1);
+                continue;
+            }
+            const alpha = p.life;
+            X.save();
+            X.globalAlpha = alpha;
+            X.shadowColor = p.color;
+            X.shadowBlur = p.glow * alpha;
+            X.fillStyle = p.color;
+            X.beginPath();
+            X.arc(p.x, p.y, Math.max(0.5, p.size * alpha), 0, Math.PI * 2);
+            X.fill();
+            X.restore();
+        }
+
+        currentToolRaf = requestAnimationFrame(pcAnimate);
+    }
+
+    window.pcClear = function() {
+        particles = [];
+        X.fillStyle = getThemeColors().bg;
+        X.fillRect(0, 0, C.width, C.height);
+    }
+
+    window.pcExport = function() {
+        const link = document.createElement('a');
+        link.download = 'particle-canvas.png';
+        link.href = C.toDataURL('image/png');
+        link.click();
+    }
+
+    pcAnimate();
+}
+</script>
+    <div class="theme-fab" id="themeFab">
+        <button class="theme-fab-main" id="themeFabMain" aria-label="切换主题">🎨</button>
+        <button class="theme-fab-opt" data-theme-val="cyberpunk" aria-label="赛博朋克主题" title="赛博朋克"></button>
+        <button class="theme-fab-opt" data-theme-val="aurora" aria-label="极光白主题" title="极光白"></button>
+        <button class="theme-fab-opt" data-theme-val="midnight" aria-label="暗夜紫主题" title="暗夜紫"></button>
+    </div>
+
+    <style>
+        .theme-fab {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            flex-direction: row-reverse;
+            gap: 0;
+        }
+        .theme-fab-main {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 3px solid var(--onz-cyan);
+            background: var(--onz-dark);
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 0 15px var(--onz-glow-color);
+            transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .theme-fab-main:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 25px var(--onz-glow-color);
+        }
+        .theme-fab-opt {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s, box-shadow 0.3s;
+            opacity: 0;
+            transform: scale(0) translateX(20px);
+            pointer-events: none;
+            margin-right: -8px;
+            flex-shrink: 0;
+        }
+        .theme-fab.open .theme-fab-opt {
+            opacity: 1;
+            transform: scale(1) translateX(0);
+            pointer-events: auto;
+        }
+        .theme-fab.open .theme-fab-opt:nth-child(2) { transition-delay: 0.03s; margin-right: 10px; }
+        .theme-fab.open .theme-fab-opt:nth-child(3) { transition-delay: 0.08s; margin-right: 10px; }
+        .theme-fab.open .theme-fab-opt:nth-child(4) { transition-delay: 0.13s; margin-right: 10px; }
+        .theme-fab-opt:hover {
+            transform: scale(1.15) translateX(0) !important;
+            box-shadow: 0 0 15px var(--onz-glow-color);
+        }
+        .theme-fab-opt[data-theme-val="cyberpunk"] {
+            background: linear-gradient(135deg, #00f5ff, #9d00ff);
+        }
+        .theme-fab-opt[data-theme-val="aurora"] {
+            background: linear-gradient(135deg, #ffffff, #00c9db);
+        }
+        .theme-fab-opt[data-theme-val="midnight"] {
+            background: linear-gradient(135deg, #a855f7, #0f0a1a);
+        }
+        .theme-fab-opt.active {
+            border-color: #fff;
+            box-shadow: 0 0 12px var(--onz-glow-color);
+        }
+        [data-theme="aurora"] .theme-fab-main { border-color: var(--onz-cyan); background: var(--onz-dark); }
+        [data-theme="midnight"] .theme-fab-main { border-color: var(--onz-purple); background: var(--onz-dark); }
+        @media (max-width: 480px) {
+            .theme-fab { bottom: 20px; right: 20px; }
+            .theme-fab-main { width: 44px; height: 44px; font-size: 18px; }
+            .theme-fab-opt { width: 36px; height: 36px; }
+        }
+    </style>
+
+    <script>
+    (function(){
+        var fab = document.getElementById('themeFab');
+        var mainBtn = document.getElementById('themeFabMain');
+        var opts = fab.querySelectorAll('.theme-fab-opt');
+        var currentTheme = document.documentElement.getAttribute('data-theme') || 'cyberpunk';
+
+        function updateActive() {
+            opts.forEach(function(o) {
+                o.classList.toggle('active', o.getAttribute('data-theme-val') === currentTheme);
+            });
+        }
+        updateActive();
+
+        mainBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            fab.classList.toggle('open');
+        });
+
+        opts.forEach(function(o) {
+            o.addEventListener('click', function(e) {
+                e.stopPropagation();
+                currentTheme = o.getAttribute('data-theme-val');
+                document.documentElement.setAttribute('data-theme', currentTheme);
+                try { localStorage.setItem('onz_theme', currentTheme); } catch(ex) {}
+                updateActive();
+                fab.classList.remove('open');
+            });
+        });
+
+        document.addEventListener('click', function() {
+            fab.classList.remove('open');
+        });
+
+        fab.addEventListener('click', function(e) { e.stopPropagation(); });
+    })();
+    </script>
+<script>
+(function(){
+    var navToggle = document.getElementById('navToggle');
+    var navLinks = document.getElementById('navLinks');
+    if (navToggle && navLinks) {
+        navToggle.addEventListener('click', function() {
+            navToggle.classList.toggle('active');
+            navLinks.classList.toggle('mobile-open');
+        });
+        navLinks.querySelectorAll('a').forEach(function(a) {
+            a.addEventListener('click', function() {
+                navToggle.classList.remove('active');
+                navLinks.classList.remove('mobile-open');
+            });
+        });
+    }
+})();
+</script>
+</body>
+</html>
